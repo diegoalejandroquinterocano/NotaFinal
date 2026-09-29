@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ITM Académico | Gestor de Notas y Proyección 3.0</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            itm: {
+              navy: '#002F6C',
+              dark: '#001F47',
+              gold: '#F9A01B',
+              'gold-hover': '#e08c0d',
+              cyan: '#0094D8',
+              light: '#F8FAFC'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Matter.js CDN (Físicas para Google Anti-Gravity) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+
+  <!-- Estilos Personalizados ITM -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-800 antialiased selection:bg-itm-gold selection:text-itm-navy">
+
+  <!-- BARRA DE NAVEGACIÓN INSTITUCIONAL ITM -->
+  <header class="sticky top-0 z-40 glass-nav text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Logo y Título ITM -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-itm-gold flex items-center justify-center shadow-md font-extrabold text-itm-navy text-xl tracking-tighter">
+            ITM
+          </div>
+          <div>
+            <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+              Gestión Académica
+              <span class="text-xs bg-itm-cyan/30 text-itm-cyan border border-itm-cyan/40 px-2 py-0.5 rounded-full font-medium">3.0 Target</span>
+            </h1>
+            <p class="text-xs text-slate-300 font-medium">Instituto Tecnológico Metropolitano</p>
+          </div>
+        </div>
+
+        <!-- Botones de Acción: Modo Anti-Gravity y Utilidades -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          <button id="btnCompareStudents" class="hidden sm:inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all duration-200">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            Comparar Estudiantes
+          </button>
+
+          <!-- Botón Especial Google Anti-Gravity -->
+          <button id="btnToggleGravity" class="inline-flex items-center px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-itm-gold hover:bg-itm-gold-hover text-itm-navy shadow-md transition-all duration-300 transform active:scale-95">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+            </svg>
+            <span>Activar Antigravedad 🚀</span>
+          </button>
+
+          <!-- Botón de Sacudida Física (Visible al activar antigravedad) -->
+          <button id="btnShakePhysics" class="hidden inline-flex items-center px-3 py-2 text-xs font-bold rounded-xl bg-amber-500 hover:bg-amber-600 text-white shadow-md transition-all duration-200">
+            💥 Sacudir
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- BANNER FLOTANTE DEL MODO ANTIGRAVEDAD -->
+  <div id="antigravityBanner" class="hidden bg-gradient-to-r from-itm-navy via-indigo-900 to-itm-navy text-white text-xs sm:text-sm py-2.5 px-4 text-center border-b-2 border-itm-gold font-medium sticky top-16 z-30 shadow-md">
+    🕹️ <strong class="text-itm-gold">Efecto Google Anti-Gravity Activo:</strong> Arrastra y lanza cualquier elemento con tu cursor o dedo. En celular, inclina la pantalla para mover la gravedad con el giroscopio.
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- SECCIÓN MULTI-ESTUDIANTE (HASTA 5 PERFILES) -->
+    <div class="glass-panel p-4 rounded-2xl shadow-sm physics-target">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-itm-navy">Modo Multi-Estudiante</span>
+            <span class="text-xs text-slate-500 font-semibold" id="studentCounterText">(3/5 estudiantes)</span>
+          </div>
+          <p class="text-xs text-slate-500">Conmuta entre perfiles para gestionar y proyectar notas de manera independiente</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="btnOpenAddStudent" class="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg bg-itm-navy hover:bg-itm-dark text-white transition-colors duration-200">
+            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Nuevo Estudiante
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabs de Estudiantes -->
+      <div class="flex items-center gap-2 overflow-x-auto pt-3 pb-1" id="studentsTabsContainer">
+        <!-- Renderizado dinámicamente -->
+      </div>
+    </div>
+
+    <!-- TARJETA DE INFORMACIÓN DEL ESTUDIANTE ACTIVO -->
+    <div class="glass-panel p-5 rounded-2xl shadow-sm border-l-4 border-itm-gold physics-target" id="studentHeaderCard">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+          <div id="studentAvatar" class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-itm-navy to-itm-cyan flex items-center justify-center text-white text-xl font-black shadow-md">
+            MV
+          </div>
+          <div>
+            <h2 id="studentNameText" class="text-xl font-extrabold text-slate-900 tracking-tight">Mateo Vásquez</h2>
+            <p id="studentProgramText" class="text-xs sm:text-sm text-slate-600 font-medium">Ingeniería de Sistemas ITM • Semestre 2026-1</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 self-start md:self-auto">
+          <button id="btnEditCurrentStudent" class="px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:text-itm-navy bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">
+            Editar Perfil
+          </button>
+          <button id="btnDeleteCurrentStudent" class="px-2.5 py-1.5 text-xs font-medium text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TARJETAS DE MÉTRICAS GLOBALES DEL SEMESTRE -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Promedio Semestral -->
+      <div class="glass-panel p-4 rounded-2xl shadow-sm physics-target border-t-2 border-itm-navy">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Promedio Semestre</span>
+          <span class="p-1.5 bg-blue-50 text-itm-navy rounded-lg text-xs">ITM Scale</span>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="metricSemesterAvg" class="text-3xl font-extrabold text-slate-900 font-mono">0.00</span>
+          <span class="text-xs font-semibold text-slate-500">/ 5.0</span>
+        </div>
+        <div class="mt-2 text-xs font-medium" id="metricAvgBadge">
+          <span class="text-slate-500">Calculado con créditos</span>
+        </div>
+      </div>
+
+      <!-- Materias Aprobadas -->
+      <div class="glass-panel p-4 rounded-2xl shadow-sm physics-target border-t-2 border-emerald-500">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Aprobadas (&ge; 3.0)</span>
+          <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg text-xs">Éxito</span>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="metricPassedCount" class="text-3xl font-extrabold text-emerald-600 font-mono">0</span>
+          <span id="metricTotalSubjectsText" class="text-xs font-semibold text-slate-500">de 0 materias</span>
+        </div>
+        <div class="mt-2 text-xs font-medium text-emerald-700">
+          Nota mínima ITM: 3.0
+        </div>
+      </div>
+
+      <!-- Materias en Riesgo -->
+      <div class="glass-panel p-4 rounded-2xl shadow-sm physics-target border-t-2 border-rose-500">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">En Riesgo Crítico</span>
+          <span class="p-1.5 bg-rose-50 text-rose-600 rounded-lg text-xs">Alerta</span>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="metricRiskCount" class="text-3xl font-extrabold text-rose-600 font-mono">0</span>
+          <span class="text-xs font-semibold text-slate-500">requieren &gt; 5.0</span>
+        </div>
+        <div class="mt-2 text-xs font-medium text-rose-700">
+          Atención prioritaria
+        </div>
+      </div>
+
+      <!-- Total Créditos -->
+      <div class="glass-panel p-4 rounded-2xl shadow-sm physics-target border-t-2 border-itm-gold">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Créditos Inscritos</span>
+          <span class="p-1.5 bg-amber-50 text-itm-gold rounded-lg text-xs">Carga</span>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="metricCreditsCount" class="text-3xl font-extrabold text-slate-900 font-mono">0</span>
+          <span class="text-xs font-semibold text-slate-500">créditos</span>
+        </div>
+        <div class="mt-2 text-xs font-medium text-amber-700">
+          Carga académica activa
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECCIÓN DE GRÁFICAS ESTADÍSTICAS -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Gráfico de Barras: Notas y Línea Meta 3.0 -->
+      <div class="lg:col-span-2 glass-panel p-5 rounded-2xl shadow-sm physics-target">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Progreso de Notas vs Meta ITM (3.0)</h3>
+            <p class="text-xs text-slate-500">Acumulado actual por materia comparado con la nota aprobatoria</p>
+          </div>
+          <span class="px-2 py-1 bg-itm-navy/10 text-itm-navy text-xs font-bold rounded-md">Escala 0.0 - 5.0</span>
+        </div>
+        <div class="relative h-64 w-full">
+          <canvas id="gradesBarChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Gráfico Doughnut: Distribución del Semestre -->
+      <div class="glass-panel p-5 rounded-2xl shadow-sm physics-target">
+        <div class="mb-4">
+          <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Estado del Semestre</h3>
+          <p class="text-xs text-slate-500">Distribución de materias aprobadas, viables y en riesgo</p>
+        </div>
+        <div class="relative h-64 w-full flex items-center justify-center">
+          <canvas id="distributionDoughnutChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECCIÓN DE MATERIAS (HASTA 10 POR SEMESTRE) -->
+    <div class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            Materias del Semestre
+            <span id="subjectCountBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-itm-navy text-white">0 / 10</span>
+          </h3>
+          <p class="text-xs text-slate-500">Desglose de parciales, quices, talleres y lógica de proyección a 3.0</p>
+        </div>
+
+        <button id="btnOpenAddSubject" class="inline-flex items-center px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-itm-navy hover:bg-itm-dark text-white shadow-md transition-all duration-200">
+          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Matricular Nueva Materia
+        </button>
+      </div>
+
+      <!-- Contenedor Cuadrícula de Materias -->
+      <div id="subjectsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Renderizado dinámicamente -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: MATRICULAR / EDITAR MATERIA -->
+  <div id="modalSubject" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-200">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h4 id="modalSubjectTitle" class="text-lg font-bold text-itm-navy">Matricular Materia ITM</h4>
+        <button id="btnCloseSubjectModal" class="text-slate-400 hover:text-slate-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <form id="formSubject" class="space-y-4">
+        <input type="hidden" id="inputSubjectId">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre de la Materia *</label>
+          <input type="text" id="inputSubjectName" required placeholder="Ej. Cálculo Diferencial" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Código (Opcional)</label>
+            <input type="text" id="inputSubjectCode" placeholder="Ej. MAT101" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none uppercase">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Créditos ITM *</label>
+            <input type="number" id="inputSubjectCredits" min="1" max="10" value="3" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t">
+          <button type="button" id="btnCancelSubject" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
+          <button type="submit" class="px-4 py-2 text-xs font-bold rounded-xl bg-itm-navy hover:bg-itm-dark text-white">Guardar Materia</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: AÑADIR / EDITAR EVALUACIÓN -->
+  <div id="modalEvaluation" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-200">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h4 id="modalEvalTitle" class="text-lg font-bold text-itm-navy">Registrar Evaluación</h4>
+        <button id="btnCloseEvalModal" class="text-slate-400 hover:text-slate-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <form id="formEvaluation" class="space-y-4">
+        <input type="hidden" id="inputEvalSubjectId">
+        <input type="hidden" id="inputEvalId">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre / Descripción *</label>
+          <input type="text" id="inputEvalName" required placeholder="Ej. Parcial 1, Quiz Tema 2, Taller..." class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tipo de Actividad</label>
+            <select id="inputEvalType" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none bg-white">
+              <option value="Parcial">Parcial</option>
+              <option value="Quiz">Quiz</option>
+              <option value="Taller">Taller / Lab</option>
+              <option value="Proyecto">Proyecto</option>
+              <option value="Seguimiento">Seguimiento</option>
+              <option value="Final">Examen Final</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Peso (%) *</label>
+            <input type="number" id="inputEvalWeight" min="1" max="100" step="0.5" required placeholder="Ej. 25" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nota Obtenida (0.0 - 5.0) *</label>
+          <input type="number" id="inputEvalGrade" min="0.0" max="5.0" step="0.01" required placeholder="Ej. 3.8" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none font-mono">
+          <p class="text-xs text-slate-500 mt-1">Escala ITM de 0.0 a 5.0 (Aprobatoria: 3.0)</p>
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t">
+          <button type="button" id="btnCancelEval" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
+          <button type="submit" class="px-4 py-2 text-xs font-bold rounded-xl bg-itm-navy hover:bg-itm-dark text-white">Guardar Evaluación</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CREAR / EDITAR ESTUDIANTE -->
+  <div id="modalStudent" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-200">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h4 id="modalStudentTitle" class="text-lg font-bold text-itm-navy">Perfil de Estudiante ITM</h4>
+        <button id="btnCloseStudentModal" class="text-slate-400 hover:text-slate-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <form id="formStudent" class="space-y-4">
+        <input type="hidden" id="inputStudentId">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
+          <input type="text" id="inputStudentName" required placeholder="Ej. Mateo Vásquez" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Carrera / Programa Académico *</label>
+          <input type="text" id="inputStudentProgram" required placeholder="Ej. Ingeniería de Sistemas ITM" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Semestre / Periodo</label>
+          <input type="text" id="inputStudentSemester" value="Semestre 2026-1" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t">
+          <button type="button" id="btnCancelStudent" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
+          <button type="submit" class="px-4 py-2 text-xs font-bold rounded-xl bg-itm-navy hover:bg-itm-dark text-white">Guardar Estudiante</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: COMPARADOR MULTI-ESTUDIANTE -->
+  <div id="modalCompare" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <h4 class="text-lg font-bold text-itm-navy">Comparador de Informes Académicos ITM</h4>
+          <p class="text-xs text-slate-500">Resumen y estado global de los estudiantes registrados (hasta 5)</p>
+        </div>
+        <button id="btnCloseCompareModal" class="text-slate-400 hover:text-slate-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead>
+            <tr class="bg-slate-100 text-slate-700 border-b">
+              <th class="p-3">Estudiante</th>
+              <th class="p-3">Programa</th>
+              <th class="p-3 text-center">Materias</th>
+              <th class="p-3 text-center">Créditos</th>
+              <th class="p-3 text-center">Promedio</th>
+              <th class="p-3 text-center">Aprobadas</th>
+              <th class="p-3 text-center">En Riesgo</th>
+              <th class="p-3 text-center">Acción</th>
+            </tr>
+          </thead>
+          <tbody id="compareTableBody" class="divide-y">
+            <!-- Dinámico -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Módulos de la Aplicación -->
+  <script src="js/app.bundle.js"></script>
+</body>
+</html>
