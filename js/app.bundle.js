@@ -162,24 +162,43 @@
         console.error('Error descargando datos de Google Sheets:', e);
       }
     }
-
-    async saveState() {
+async saveState() {
       this.notify(); 
       try {
-        await fetch(`${SHEETDB_URL}/id/1`, {
-          method: 'PATCH',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            data: { datos: JSON.stringify(this.state) }
-          })
-        });
+        // 1. Primero verificamos si la fila con id=1 ya existe
+        const checkRes = await fetch(`${SHEETDB_URL}/id/1`);
+        const checkData = await checkRes.json();
+
+        if (checkData && checkData.length > 0 && !checkData.error) {
+          // 2. Si la fila YA existe, la actualizamos (PATCH)
+          await fetch(`${SHEETDB_URL}/id/1`, {
+            method: 'PATCH',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              data: { datos: JSON.stringify(this.state) }
+            })
+          });
+        } else {
+          // 3. Si la fila NO existe (hoja en blanco), la creamos desde cero (POST)
+          await fetch(SHEETDB_URL, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              data: { id: "1", datos: JSON.stringify(this.state) }
+            })
+          });
+        }
       } catch (e) {
         console.error('Error guardando en Google Sheets:', e);
       }
     }
+    
 
     subscribe(listener) {
       this.listeners.push(listener);
