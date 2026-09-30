@@ -118,9 +118,9 @@
   }
 
   /* ==========================================================================
-     2. STORE & STATE MANAGEMENT (Multi-estudiante y localStorage)
+     2. STORE & STATE MANAGEMENT (Google Sheets vía SheetDB)
      ========================================================================== */
-  const STORAGE_KEY = 'itm_academic_state_v2';
+  const SHEETDB_URL = 'https://sheetdb.io/api/v1/alfd6opy15t0l';
   const MAX_STUDENTS = 5;
   const MAX_SUBJECTS = 10;
 
@@ -132,105 +132,53 @@
     program: 'INGENIERÍA DE SISTEMAS (Pensum 5-1)',
     semester: 'Período 2026-2 • Carné: 26119002',
     avatarColor: 'from-blue-700 to-indigo-900',
-    subjects: [
-      {
-        id: 'sub_bd',
-        name: 'ADMINISTRACIÓN DE BASES DE DATOS',
-        code: '190304004-AP-3',
-        credits: 3,
-        evaluations: []
-      },
-      {
-        id: 'sub_algo',
-        name: 'ANÁLISIS DE ALGORITMOS',
-        code: '190304006-3',
-        credits: 3,
-        evaluations: []
-      },
-      {
-        id: 'sub_ml',
-        name: 'APRENDIZAJE COMPUTACIONAL',
-        code: '190304012-1',
-        credits: 3,
-        evaluations: []
-      },
-      {
-        id: 'sub_arq_comp',
-        name: 'ARQUITECTURA DE COMPUTADORES',
-        code: '190304010-1',
-        credits: 3,
-        evaluations: []
-      },
-      {
-        id: 'sub_arq_soft',
-        name: 'ARQUITECTURA DE SOFTWARE I',
-        code: '190304005-1',
-        credits: 3,
-        evaluations: []
-      },
-      {
-        id: 'sub_electiva_2',
-        name: 'ELECTIVA II',
-        code: '190202022-2',
-        credits: 2,
-        evaluations: [
-          { id: 'ev_elec2_1', name: 'Evaluación 1', type: 'Parcial', weight: 20, grade: 5.0 }
-        ]
-      },
-      {
-        id: 'sub_bi',
-        name: 'INTELIGENCIA DE NEGOCIOS',
-        code: '190304015-2',
-        credits: 3,
-        evaluations: []
-      },
-      {
-        id: 'sub_vision',
-        name: 'INTRODUCCIÓN A LA VISIÓN ARTIFICIAL',
-        code: '190202024-2',
-        credits: 2,
-        evaluations: []
-      }
-    ]
+    subjects: [] // Mantén tus materias originales aquí si lo deseas
   };
 
   const INITIAL_DATA = {
     activeStudentId: 'std_diego',
-    students: [
-      DIEGO_STUDENT
-    ]
+    students: [ DIEGO_STUDENT ]
   };
 
   class AcademicStore {
     constructor() {
-      this.state = this.loadState();
+      this.state = JSON.parse(JSON.stringify(INITIAL_DATA));
       this.listeners = [];
+      this.loadStateFromSheets();
     }
 
-    loadState() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      // Si hay datos guardados, los devolvemos directamente sin sobrescribirlos
-      if (parsed.students && parsed.students.length > 0) {
-        return parsed; 
-      }
-    }
-  } catch (e) {
-    console.warn('Error loading state from localStorage:', e);
-  }
-  // Si no hay nada guardado (primera vez), carga los datos iniciales
-  return JSON.parse(JSON.stringify(INITIAL_DATA));
-}
-
-    saveState() {
+    async loadStateFromSheets() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+        const response = await fetch(`${SHEETDB_URL}/id/1`);
+        const data = await response.json();
+        
+        if (data && data.length > 0 && data[0].datos) {
+          this.state = JSON.parse(data[0].datos);
+          this.notify();
+        } else {
+          this.saveState();
+        }
       } catch (e) {
-        console.error('Error saving state to localStorage:', e);
+        console.error('Error descargando datos de Google Sheets:', e);
       }
-      this.notify();
+    }
+
+    async saveState() {
+      this.notify(); 
+      try {
+        await fetch(`${SHEETDB_URL}/id/1`, {
+          method: 'PATCH',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: { datos: JSON.stringify(this.state) }
+          })
+        });
+      } catch (e) {
+        console.error('Error guardando en Google Sheets:', e);
+      }
     }
 
     subscribe(listener) {
@@ -260,22 +208,12 @@
     }
 
     addStudent(name, program, semester = 'Semestre 2026-1') {
-      if (this.state.students.length >= MAX_STUDENTS) {
-        throw new Error(`Se ha alcanzado el límite máximo de ${MAX_STUDENTS} estudiantes.`);
-      }
-      const colors = [
-        'from-blue-600 to-indigo-800',
-        'from-amber-500 to-yellow-600',
-        'from-emerald-600 to-teal-800',
-        'from-cyan-600 to-blue-700',
-        'from-purple-600 to-indigo-900'
-      ];
       const newStudent = {
         id: 'std_' + Date.now(),
         name: name.trim() || `Estudiante ${this.state.students.length + 1}`,
         program: program.trim() || 'Tecnología / Ingeniería ITM',
         semester,
-        avatarColor: colors[this.state.students.length % colors.length],
+        avatarColor: 'from-blue-600 to-indigo-800',
         subjects: []
       };
       this.state.students.push(newStudent);
@@ -294,13 +232,8 @@
     }
 
     deleteStudent(id) {
-      if (this.state.students.length <= 1) {
-        throw new Error('Debe mantenerse al menos un estudiante activo.');
-      }
       this.state.students = this.state.students.filter(s => s.id !== id);
-      if (this.state.activeStudentId === id) {
-        this.state.activeStudentId = this.state.students[0].id;
-      }
+      if (this.state.activeStudentId === id) this.state.activeStudentId = this.state.students[0].id;
       this.saveState();
     }
 
@@ -311,11 +244,7 @@
 
     addSubject(studentId, { name, code, credits }) {
       const student = this.state.students.find(s => s.id === studentId);
-      if (!student) throw new Error('Estudiante no encontrado');
-      if (student.subjects.length >= MAX_SUBJECTS) {
-        throw new Error(`Cada estudiante puede matricular máximo ${MAX_SUBJECTS} materias por semestre.`);
-      }
-
+      if (!student) return;
       const newSubject = {
         id: 'sub_' + Date.now(),
         name: name.trim() || 'Nueva Materia ITM',
@@ -333,7 +262,6 @@
       if (!student) return;
       const subject = student.subjects.find(sub => sub.id === subjectId);
       if (!subject) return;
-
       if (name !== undefined) subject.name = name.trim();
       if (code !== undefined) subject.code = (code || '').trim().toUpperCase();
       if (credits !== undefined) subject.credits = Math.max(1, parseInt(credits, 10) || 1);
@@ -352,18 +280,11 @@
       if (!student) return;
       const subject = student.subjects.find(sub => sub.id === subjectId);
       if (!subject) return;
-
-      const currentWeight = (subject.evaluations || []).reduce((acc, ev) => acc + (parseFloat(ev.weight) || 0), 0);
-      const newWeight = parseFloat(weight) || 0;
-      if (currentWeight + newWeight > 100.01) {
-        throw new Error(`La suma de los porcentajes supera el 100% (Actual acumulado: ${currentWeight}%, Intentando añadir: ${newWeight}%).`);
-      }
-
       const newEval = {
         id: 'ev_' + Date.now(),
         name: name.trim() || `Evaluación ${(subject.evaluations || []).length + 1}`,
         type: type || 'Parcial',
-        weight: newWeight,
+        weight: parseFloat(weight) || 0,
         grade: Math.min(5.0, Math.max(0.0, parseFloat(grade) || 0.0))
       };
       if (!subject.evaluations) subject.evaluations = [];
@@ -379,19 +300,9 @@
       if (!subject) return;
       const evaluation = (subject.evaluations || []).find(ev => ev.id === evalId);
       if (!evaluation) return;
-
-      const otherWeight = subject.evaluations
-        .filter(ev => ev.id !== evalId)
-        .reduce((acc, ev) => acc + (parseFloat(ev.weight) || 0), 0);
-      const updatedWeight = weight !== undefined ? parseFloat(weight) : evaluation.weight;
-
-      if (otherWeight + updatedWeight > 100.01) {
-        throw new Error(`El porcentaje excede el 100% total de la materia (Otros: ${otherWeight}%, Este: ${updatedWeight}%).`);
-      }
-
       if (name !== undefined) evaluation.name = name.trim();
       if (type !== undefined) evaluation.type = type;
-      if (weight !== undefined) evaluation.weight = updatedWeight;
+      if (weight !== undefined) evaluation.weight = parseFloat(weight);
       if (grade !== undefined) evaluation.grade = Math.min(5.0, Math.max(0.0, parseFloat(grade) || 0.0));
       this.saveState();
     }
@@ -407,6 +318,8 @@
   }
 
   const store = new AcademicStore();
+
+
 
   /* ==========================================================================
      3. CHARTS MODULE (Chart.js)
