@@ -120,131 +120,84 @@
   /* ==========================================================================
      2. STORE & STATE MANAGEMENT (Multi-estudiante y localStorage)
      ========================================================================== */
-  const STORAGE_KEY = 'itm_academic_state_v1';
+  const STORAGE_KEY = 'itm_academic_state_v2';
   const MAX_STUDENTS = 5;
   const MAX_SUBJECTS = 10;
 
-  const INITIAL_DATA = {
-    activeStudentId: 'std_1',
-    students: [
+  const DIEGO_STUDENT = {
+    id: 'std_diego',
+    name: 'DIEGO ALEJANDRO QUINTERO CANO',
+    document: 'CC 16076155',
+    carne: '26119002',
+    program: 'INGENIERÍA DE SISTEMAS (Pensum 5-1)',
+    semester: 'Período 2026-2 • Carné: 26119002',
+    avatarColor: 'from-blue-700 to-indigo-900',
+    subjects: [
       {
-        id: 'std_1',
-        name: 'Mateo Vásquez',
-        program: 'Ingeniería de Sistemas ITM',
-        semester: 'Semestre 2026-1',
-        avatarColor: 'from-blue-600 to-indigo-800',
-        subjects: [
-          {
-            id: 'sub_1',
-            name: 'Cálculo Diferencial',
-            code: 'MAT101',
-            credits: 4,
-            evaluations: [
-              { id: 'ev_1_1', name: 'Parcial 1', type: 'Parcial', weight: 25, grade: 3.8 },
-              { id: 'ev_1_2', name: 'Quiz 1 & 2', type: 'Quiz', weight: 15, grade: 2.5 },
-              { id: 'ev_1_3', name: 'Talleres en Clase', type: 'Taller', weight: 10, grade: 4.2 }
-            ]
-          },
-          {
-            id: 'sub_2',
-            name: 'Algoritmos y Programación II',
-            code: 'SIS202',
-            credits: 3,
-            evaluations: [
-              { id: 'ev_2_1', name: 'Reto 1 (Estructuras)', type: 'Taller', weight: 20, grade: 4.5 },
-              { id: 'ev_2_2', name: 'Parcial 1 Teórico', type: 'Parcial', weight: 25, grade: 4.0 },
-              { id: 'ev_2_3', name: 'Proyecto Fase 1', type: 'Proyecto', weight: 20, grade: 4.8 }
-            ]
-          },
-          {
-            id: 'sub_3',
-            name: 'Física Mecánica',
-            code: 'FIS102',
-            credits: 4,
-            evaluations: [
-              { id: 'ev_3_1', name: 'Laboratorio Cinemática', type: 'Taller', weight: 15, grade: 3.2 },
-              { id: 'ev_3_2', name: 'Parcial 1', type: 'Parcial', weight: 25, grade: 1.8 }
-            ]
-          },
-          {
-            id: 'sub_4',
-            name: 'Álgebra Lineal',
-            code: 'MAT103',
-            credits: 3,
-            evaluations: [
-              { id: 'ev_4_1', name: 'Parcial Matrices', type: 'Parcial', weight: 25, grade: 3.0 },
-              { id: 'ev_4_2', name: 'Quiz Espacios Vectoriales', type: 'Quiz', weight: 15, grade: 3.5 }
-            ]
-          },
-          {
-            id: 'sub_5',
-            name: 'Humanidades e Innovación',
-            code: 'HUM101',
-            credits: 2,
-            evaluations: [
-              { id: 'ev_5_1', name: 'Ensayo Ética en IA', type: 'Taller', weight: 30, grade: 4.6 },
-              { id: 'ev_5_2', name: 'Debate grupal', type: 'Seguimiento', weight: 30, grade: 4.3 }
-            ]
-          }
+        id: 'sub_bd',
+        name: 'ADMINISTRACIÓN DE BASES DE DATOS',
+        code: '190304004-AP-3',
+        credits: 3,
+        evaluations: []
+      },
+      {
+        id: 'sub_algo',
+        name: 'ANÁLISIS DE ALGORITMOS',
+        code: '190304006-3',
+        credits: 3,
+        evaluations: []
+      },
+      {
+        id: 'sub_ml',
+        name: 'APRENDIZAJE COMPUTACIONAL',
+        code: '190304012-1',
+        credits: 3,
+        evaluations: []
+      },
+      {
+        id: 'sub_arq_comp',
+        name: 'ARQUITECTURA DE COMPUTADORES',
+        code: '190304010-1',
+        credits: 3,
+        evaluations: []
+      },
+      {
+        id: 'sub_arq_soft',
+        name: 'ARQUITECTURA DE SOFTWARE I',
+        code: '190304005-1',
+        credits: 3,
+        evaluations: []
+      },
+      {
+        id: 'sub_electiva_2',
+        name: 'ELECTIVA II',
+        code: '190202022-2',
+        credits: 2,
+        evaluations: [
+          { id: 'ev_elec2_1', name: 'Evaluación 1', type: 'Parcial', weight: 20, grade: 5.0 }
         ]
       },
       {
-        id: 'std_2',
-        name: 'Valentina Gómez',
-        program: 'Ingeniería Mecatrónica ITM',
-        semester: 'Semestre 2026-1',
-        avatarColor: 'from-amber-500 to-yellow-600',
-        subjects: [
-          {
-            id: 'sub_201',
-            name: 'Circuitos Eléctricos I',
-            code: 'MEC201',
-            credits: 4,
-            evaluations: [
-              { id: 'ev_201_1', name: 'Leyes de Kirchhoff', type: 'Parcial', weight: 30, grade: 4.1 },
-              { id: 'ev_201_2', name: 'Práctica de Laboratorio', type: 'Taller', weight: 20, grade: 4.4 }
-            ]
-          },
-          {
-            id: 'sub_202',
-            name: 'Cálculo Integral',
-            code: 'MAT201',
-            credits: 4,
-            evaluations: [
-              { id: 'ev_202_1', name: 'Parcial Técnicas Integración', type: 'Parcial', weight: 25, grade: 2.4 },
-              { id: 'ev_202_2', name: 'Taller Sumas de Riemann', type: 'Taller', weight: 15, grade: 3.0 }
-            ]
-          }
-        ]
+        id: 'sub_bi',
+        name: 'INTELIGENCIA DE NEGOCIOS',
+        code: '190304015-2',
+        credits: 3,
+        evaluations: []
       },
       {
-        id: 'std_3',
-        name: 'Carlos Restrepo',
-        program: 'Ingeniería Financiera ITM',
-        semester: 'Semestre 2026-1',
-        avatarColor: 'from-emerald-600 to-teal-800',
-        subjects: [
-          {
-            id: 'sub_301',
-            name: 'Matemáticas Financieras',
-            code: 'FIN201',
-            credits: 3,
-            evaluations: [
-              { id: 'ev_301_1', name: 'Interés Compuesto', type: 'Parcial', weight: 30, grade: 4.2 },
-              { id: 'ev_301_2', name: 'Anualidades', type: 'Taller', weight: 20, grade: 3.9 }
-            ]
-          },
-          {
-            id: 'sub_302',
-            name: 'Microeconomía',
-            code: 'ECO101',
-            credits: 3,
-            evaluations: [
-              { id: 'ev_302_1', name: 'Teoría del Consumidor', type: 'Parcial', weight: 25, grade: 2.8 }
-            ]
-          }
-        ]
+        id: 'sub_vision',
+        name: 'INTRODUCCIÓN A LA VISIÓN ARTIFICIAL',
+        code: '190202024-2',
+        credits: 2,
+        evaluations: []
       }
+    ]
+  };
+
+  const INITIAL_DATA = {
+    activeStudentId: 'std_diego',
+    students: [
+      DIEGO_STUDENT
     ]
   };
 
@@ -260,6 +213,18 @@
         if (saved) {
           const parsed = JSON.parse(saved);
           if (parsed.students && parsed.students.length > 0) {
+            parsed.students = parsed.students.filter(s => 
+              s.id === 'std_diego' || 
+              (s.name && !s.name.includes('Mateo') && !s.name.includes('Valentina') && !s.name.includes('Carlos'))
+            );
+            const diegoIndex = parsed.students.findIndex(s => s.carne === '26119002' || (s.name && s.name.toUpperCase().includes('DIEGO ALEJANDRO')));
+            if (diegoIndex === -1) {
+              parsed.students.unshift(JSON.parse(JSON.stringify(DIEGO_STUDENT)));
+            } else {
+              parsed.students[diegoIndex] = JSON.parse(JSON.stringify(DIEGO_STUDENT));
+            }
+            parsed.activeStudentId = 'std_diego';
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
             return parsed;
           }
         }
@@ -977,10 +942,21 @@
     const avatarEl = document.getElementById('studentAvatar');
 
     if (nameEl) nameEl.textContent = student.name;
-    if (progEl) progEl.textContent = `${student.program} • ${student.semester || 'Semestre 2026-1'}`;
+    if (progEl) {
+      const parts = [];
+      if (student.program) parts.push(student.program);
+      if (student.semester) parts.push(student.semester);
+      if (student.document) parts.push(student.document);
+      progEl.textContent = parts.join(' • ');
+    }
     if (avatarEl) {
-      const initials = student.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
-      avatarEl.textContent = initials;
+      const initials = (student.name || '').split(' ')
+        .filter(n => n.length > 0)
+        .map(n => n[0])
+        .slice(0, 2)
+        .join('')
+        .toUpperCase();
+      avatarEl.textContent = initials || 'ITM';
     }
   }
 
