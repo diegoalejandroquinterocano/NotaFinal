@@ -165,12 +165,12 @@
 async saveState() {
       this.notify(); 
       try {
-        // 1. Primero verificamos si la fila con id=1 ya existe
+        // 1. Jahecha oĩmapa pe id=1
         const checkRes = await fetch(`${SHEETDB_URL}/id/1`);
         const checkData = await checkRes.json();
 
         if (checkData && checkData.length > 0 && !checkData.error) {
-          // 2. Si la fila YA existe, la actualizamos (PATCH)
+          // 2. Oĩma ramo (PATCH)
           await fetch(`${SHEETDB_URL}/id/1`, {
             method: 'PATCH',
             headers: {
@@ -182,7 +182,7 @@ async saveState() {
             })
           });
         } else {
-          // 3. Si la fila NO existe (hoja en blanco), la creamos desde cero (POST)
+          // 3. Ndoĩri ramo (POST - Tekotevẽ Array [])
           await fetch(SHEETDB_URL, {
             method: 'POST',
             headers: {
@@ -190,7 +190,9 @@ async saveState() {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              data: { id: "1", datos: JSON.stringify(this.state) }
+              data: [
+                { id: "1", datos: JSON.stringify(this.state) }
+              ]
             })
           });
         }
@@ -198,7 +200,6 @@ async saveState() {
         console.error('Error guardando en Google Sheets:', e);
       }
     }
-    
 
     subscribe(listener) {
       this.listeners.push(listener);
