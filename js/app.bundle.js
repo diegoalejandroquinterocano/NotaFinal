@@ -208,31 +208,21 @@
     }
 
     loadState() {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (parsed.students && parsed.students.length > 0) {
-            parsed.students = parsed.students.filter(s => 
-              s.id === 'std_diego' || 
-              (s.name && !s.name.includes('Mateo') && !s.name.includes('Valentina') && !s.name.includes('Carlos'))
-            );
-            const diegoIndex = parsed.students.findIndex(s => s.carne === '26119002' || (s.name && s.name.toUpperCase().includes('DIEGO ALEJANDRO')));
-            if (diegoIndex === -1) {
-              parsed.students.unshift(JSON.parse(JSON.stringify(DIEGO_STUDENT)));
-            } else {
-              parsed.students[diegoIndex] = JSON.parse(JSON.stringify(DIEGO_STUDENT));
-            }
-            parsed.activeStudentId = 'std_diego';
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
-            return parsed;
-          }
-        }
-      } catch (e) {
-        console.warn('Error loading state from localStorage:', e);
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Si hay datos guardados, los devolvemos directamente sin sobrescribirlos
+      if (parsed.students && parsed.students.length > 0) {
+        return parsed; 
       }
-      return JSON.parse(JSON.stringify(INITIAL_DATA));
     }
+  } catch (e) {
+    console.warn('Error loading state from localStorage:', e);
+  }
+  // Si no hay nada guardado (primera vez), carga los datos iniciales
+  return JSON.parse(JSON.stringify(INITIAL_DATA));
+}
 
     saveState() {
       try {
