@@ -120,6 +120,8 @@
   /* ==========================================================================
      2. STORE & STATE MANAGEMENT (Google Sheets vía SheetDB)
      ========================================================================== */
+
+
   const SHEETDB_URL = 'https://sheetdb.io/api/v1/bb5d3wp3gdpfa';
   const MAX_STUDENTS = 5;
   const MAX_SUBJECTS = 10;
@@ -162,44 +164,49 @@
         console.error('Error descargando datos de Google Sheets:', e);
       }
     }
-async saveState() {
-      this.notify(); 
-      try {
-        // 1. Jahecha oĩmapa pe id=1
-        const checkRes = await fetch(`${SHEETDB_URL}/id/1`);
-        const checkData = await checkRes.json();
 
-        if (checkData && checkData.length > 0 && !checkData.error) {
-          // 2. Oĩma ramo (PATCH)
-          await fetch(`${SHEETDB_URL}/id/1`, {
-            method: 'PATCH',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              data: { datos: JSON.stringify(this.state) }
-            })
-          });
-        } else {
-          // 3. Ndoĩri ramo (POST - Tekotevẽ Array [])
-          await fetch(SHEETDB_URL, {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              data: [
-                { id: "1", datos: JSON.stringify(this.state) }
-              ]
-            })
-          });
-        }
-      } catch (e) {
-        console.error('Error guardando en Google Sheets:', e);
+
+  
+  // ... (aquí va tu INITIAL_DATA y constructor) ...
+
+  async saveState() {
+    this.notify(); 
+    try {
+      // 1. Verificamos si la fila id=1 existe
+      const checkRes = await fetch(`${SHEETDB_URL}/id/1`);
+      const checkData = await checkRes.json();
+
+      if (checkData && checkData.length > 0 && !checkData.error) {
+        // 2. Si existe, actualizamos
+        await fetch(`${SHEETDB_URL}/id/1`, {
+          method: 'PATCH',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: { datos: JSON.stringify(this.state) }
+          })
+        });
+      } else {
+        // 3. Si no existe, creamos la fila con formato Array
+        await fetch(SHEETDB_URL, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: [
+              { id: "1", datos: JSON.stringify(this.state) }
+            ]
+          })
+        });
       }
+    } catch (e) {
+      console.error('Error guardando en Google Sheets:', e);
     }
+  }
 
     subscribe(listener) {
       this.listeners.push(listener);
