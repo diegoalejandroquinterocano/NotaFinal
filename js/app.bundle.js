@@ -122,7 +122,7 @@
      ========================================================================== */
 
 
-  const SHEETDB_URL = 'https://sheetdb.io/api/v1/bb5d3wp3gdpfa';
+ const SHEETDB_URL = 'https://sheetdb.io/api/v1/bb5d3wp3gdpfa';
   const MAX_STUDENTS = 5;
   const MAX_SUBJECTS = 10;
 
