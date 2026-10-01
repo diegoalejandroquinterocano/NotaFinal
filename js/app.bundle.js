@@ -121,8 +121,11 @@
      2. STORE & STATE MANAGEMENT (Google Sheets vía SheetDB)
      ========================================================================== */
 
-
- const SHEETDB_URL = 'https://sheetdb.io/api/v1/bb5d3wp3gdpfa';
+/* ==========================================================================
+     2. STORE & STATE MANAGEMENT (Google Apps Script)
+     ========================================================================== */
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvXovX37K3dU2qBcSJPC49RPHDis0DM9z-kAsEsvf20jKfX3fKbczVSfVScJ1eHGIZ/exec';
+  
   const MAX_STUDENTS = 5;
   const MAX_SUBJECTS = 10;
 
@@ -132,9 +135,9 @@
     document: 'CC 16076155',
     carne: '26119002',
     program: 'INGENIERÍA DE SISTEMAS (Pensum 5-1)',
-    semester: 'Período 2026-2 • Carné: 26119002',
+    semester: 'Período 2026-2',
     avatarColor: 'from-blue-700 to-indigo-900',
-    subjects: [] // Mantén tus materias originales aquí si lo deseas
+    subjects: [] 
   };
 
   const INITIAL_DATA = {
@@ -151,62 +154,31 @@
 
     async loadStateFromSheets() {
       try {
-        const response = await fetch(`${SHEETDB_URL}/id/1`);
+        const response = await fetch(APPS_SCRIPT_URL);
         const data = await response.json();
         
-        if (data && data.length > 0 && data[0].datos) {
-          this.state = JSON.parse(data[0].datos);
+        if (data && data.datos) {
+          this.state = JSON.parse(data.datos);
           this.notify();
         } else {
           this.saveState();
         }
       } catch (e) {
-        console.error('Error descargando datos de Google Sheets:', e);
+        console.error('Error descargando datos:', e);
       }
     }
 
-
-  
-  // ... (aquí va tu INITIAL_DATA y constructor) ...
-
-  async saveState() {
-    this.notify(); 
-    try {
-      // 1. Verificamos si la fila id=1 existe
-      const checkRes = await fetch(`${SHEETDB_URL}/id/1`);
-      const checkData = await checkRes.json();
-
-      if (checkData && checkData.length > 0 && !checkData.error) {
-        // 2. Si existe, actualizamos
-        await fetch(`${SHEETDB_URL}/id/1`, {
-          method: 'PATCH',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            data: { datos: JSON.stringify(this.state) }
-          })
-        });
-      } else {
-        // 3. Si no existe, creamos la fila con formato Array
-        await fetch(SHEETDB_URL, {
+    async saveState() {
+      this.notify(); 
+      try {
+        await fetch(APPS_SCRIPT_URL, {
           method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            data: [
-              { id: "1", datos: JSON.stringify(this.state) }
-            ]
-          })
+          body: JSON.stringify(this.state) 
         });
+      } catch (e) {
+        console.error('Error guardando:', e);
       }
-    } catch (e) {
-      console.error('Error guardando en Google Sheets:', e);
     }
-  }
 
     subscribe(listener) {
       this.listeners.push(listener);
@@ -345,8 +317,6 @@
   }
 
   const store = new AcademicStore();
-
-
 
   /* ==========================================================================
      3. CHARTS MODULE (Chart.js)
