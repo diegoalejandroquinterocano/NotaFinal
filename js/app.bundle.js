@@ -120,7 +120,7 @@
   /* ==========================================================================
      2. STORE & STATE MANAGEMENT (Google Sheets vía SheetDB)
      ========================================================================== */
-  const SHEETDB_URL = 'https://sheetdb.io/api/v1/alfd6opy15t0l';
+  const SHEETDB_URL = 'https://sheetdb.io/api/v1/bb5d3wp3gdpfa';
   const MAX_STUDENTS = 5;
   const MAX_SUBJECTS = 10;
 
