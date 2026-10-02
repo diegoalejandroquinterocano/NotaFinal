@@ -118,10 +118,6 @@
   }
 
   /* ==========================================================================
-     2. STORE & STATE MANAGEMENT (Google Sheets vía SheetDB)
-     ========================================================================== */
-
-/* ==========================================================================
      2. STORE & STATE MANAGEMENT (Google Apps Script)
      ========================================================================== */
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvXovX37K3dU2qBcSJPC49RPHDis0DM9z-kAsEsvf20jKfX3fKbczVSfVScJ1eHGIZ/exec';
@@ -137,7 +133,66 @@
     program: 'INGENIERÍA DE SISTEMAS (Pensum 5-1)',
     semester: 'Período 2026-2',
     avatarColor: 'from-blue-700 to-indigo-900',
-    subjects: [] 
+    subjects: [
+      {
+        id: 'sub_1',
+        name: 'ADMINISTRACIÓN DE BASES DE DATOS',
+        code: '190304004-AP-3',
+        credits: 3,
+        evaluations: []
+      },
+      {
+        id: 'sub_2',
+        name: 'ANÁLISIS DE ALGORITMOS',
+        code: '190304006-3',
+        credits: 3,
+        evaluations: []
+      },
+      {
+        id: 'sub_3',
+        name: 'APRENDIZAJE COMPUTACIONAL',
+        code: '190304012-1',
+        credits: 3,
+        evaluations: []
+      },
+      {
+        id: 'sub_4',
+        name: 'ARQUITECTURA DE COMPUTADORES',
+        code: '190304010-1',
+        credits: 3,
+        evaluations: []
+      },
+      {
+        id: 'sub_5',
+        name: 'ARQUITECTURA DE SOFTWARE I',
+        code: '190304005-1',
+        credits: 3,
+        evaluations: []
+      },
+      {
+        id: 'sub_6',
+        name: 'ELECTIVA II',
+        code: '190202022-2',
+        credits: 2,
+        evaluations: [
+          { id: 'ev_61', name: 'Evaluación 1', type: 'Seguimiento', weight: 20, grade: 5.0 }
+        ]
+      },
+      {
+        id: 'sub_7',
+        name: 'INTELIGENCIA DE NEGOCIOS',
+        code: '190304015-2',
+        credits: 3,
+        evaluations: []
+      },
+      {
+        id: 'sub_8',
+        name: 'INTRODUCCIÓN A LA VISIÓN ARTIFICIAL',
+        code: '190202024-2',
+        credits: 2,
+        evaluations: []
+      }
+    ]
   };
 
   const INITIAL_DATA = {
@@ -885,7 +940,7 @@
       if (metrics.semesterAverage >= ITM_PASSING_GRADE) {
         avgBadge.innerHTML = `<span class="text-emerald-700 font-bold">✓ Sobre la meta ITM (3.0)</span>`;
       } else if (metrics.semesterAverage > 0) {
-        avgBadge.innerHTML = `<span class="text-amber-700 font-bold">⚠️ Bajo la meta ITM (3.0)</span>`;
+        avgBadge.innerHTML = `<span class="text-amber-700 font-bold">⚠️️ Bajo la meta ITM (3.0)</span>`;
       } else {
         avgBadge.innerHTML = `<span class="text-slate-500">Sin notas aún</span>`;
       }
