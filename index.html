@@ -32,8 +32,93 @@
   <!-- Matter.js CDN (Físicas para Google Anti-Gravity) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
-  <!-- Estilos Personalizados ITM -->
-  <link rel="stylesheet" href="css/styles.css">
+  <!-- ESTILOS VISUALES INTEGRADOS -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    :root {
+      --itm-navy: #002F6C;
+      --itm-navy-dark: #001F47;
+      --itm-gold: #F9A01B;
+      --itm-gold-hover: #e08c0d;
+      --itm-cyan: #0094D8;
+      --itm-bg: #F1F5F9;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--itm-bg);
+      color: #1E293B;
+      overflow-x: hidden;
+    }
+
+    .bg-itm-navy { background-color: var(--itm-navy); }
+    .bg-itm-navy-dark { background-color: var(--itm-navy-dark); }
+    .bg-itm-gold { background-color: var(--itm-gold); }
+    .bg-itm-cyan { background-color: var(--itm-cyan); }
+    .text-itm-navy { color: var(--itm-navy); }
+    .text-itm-gold { color: var(--itm-gold); }
+    .text-itm-cyan { color: var(--itm-cyan); }
+    .border-itm-navy { border-color: var(--itm-navy); }
+    .border-itm-gold { border-color: var(--itm-gold); }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .glass-nav {
+      background: rgba(0, 47, 108, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 3px solid var(--itm-gold);
+    }
+
+    body.antigravity-mode {
+      overflow: hidden !important;
+      user-select: none;
+    }
+
+    .physics-target {
+      will-change: transform;
+    }
+
+    .physics-active {
+      cursor: grab !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 47, 108, 0.35), 0 0 0 2px var(--itm-gold) !important;
+      z-index: 999 !important;
+    }
+
+    .physics-active:active {
+      cursor: grabbing !important;
+    }
+
+    .badge-grade {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    .progress-bar-glow {
+      box-shadow: 0 0 10px rgba(0, 148, 216, 0.4);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--itm-cyan);
+    }
+  </style>
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-800 antialiased selection:bg-itm-gold selection:text-itm-navy">
 
