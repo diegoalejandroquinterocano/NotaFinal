@@ -93,7 +93,7 @@
       </div>
     </aside>
 
-    <!-- COLUMNA CENTRAL: Gestor de Notas (Ocupa 2 columnas en pantallas grandes) -->
+    <!-- COLUMNA CENTRAL: Gestor de Notas -->
     <main class="col-span-1 lg:col-span-2 space-y-5">
       
       <!-- Multi-Estudiante -->
@@ -203,18 +203,18 @@
         </div>
       </div>
 
-      <!-- Noticias / Tips (Simulado) -->
+      <!-- Noticias de Tecnología -->
       <div class="card p-5">
-        <h3 class="card-header mb-4">Tips de Clase</h3>
-        <div class="space-y-4">
-          <div class="pb-3 border-b border-slate-100">
-            <h4 class="text-xs font-bold text-slate-800 mb-1">Regla del 20% en Lógica</h4>
-            <p class="text-[10px] text-slate-500 leading-relaxed">Antes de programar, dedica el 20% del tiempo a estructurar el algoritmo en papel. Te ahorrará horas de debugueo.</p>
-          </div>
-          <div>
-            <h4 class="text-xs font-bold text-slate-800 mb-1">Técnica Pomodoro</h4>
-            <p class="text-[10px] text-slate-500 leading-relaxed">Estudia 25 min y descansa 5 min. Durante la lectura de PDFs pesados aumenta la retención enormemente.</p>
-          </div>
+        <h3 class="card-header mb-4">Noticias de Tecnología</h3>
+        <div class="space-y-3">
+          <a href="https://es.wired.com/" target="_blank" class="block hover:bg-slate-50 p-2 rounded-lg transition border border-transparent hover:border-slate-200">
+            <h4 class="text-xs font-bold text-slate-800">Tendencias en Ingeniería</h4>
+            <p class="text-[10px] text-slate-500 mt-1">Descubre los avances en inteligencia artificial y desarrollo de software para el 2026.</p>
+          </a>
+          <a href="https://www.xataka.com/" target="_blank" class="block hover:bg-slate-50 p-2 rounded-lg transition border border-transparent hover:border-slate-200">
+            <h4 class="text-xs font-bold text-slate-800">Xataka: Innovación</h4>
+            <p class="text-[10px] text-slate-500 mt-1">Las últimas noticias sobre hardware, computación y el mundo digital actualizadas hoy.</p>
+          </a>
         </div>
       </div>
 
@@ -399,7 +399,6 @@
 
       class AcademicStore {
         constructor() {
-          // GUARDADO HÍBRIDO: Primero revisa la memoria local para no perder nunca datos
           const localData = localStorage.getItem('itm_academico_v2');
           if (localData) {
             this.state = JSON.parse(localData);
@@ -415,22 +414,19 @@
             const res = await fetch(APPS_SCRIPT_URL); const data = await res.json();
             if (data && data.datos) { 
               this.state = JSON.parse(data.datos); 
-              localStorage.setItem('itm_academico_v2', JSON.stringify(this.state)); // Asegura caché
+              localStorage.setItem('itm_academico_v2', JSON.stringify(this.state)); 
               this.notify(); 
             }
           } catch (e) { console.warn('Usando base local temporalmente.'); }
         }
 
         async saveState() {
-          // 1. Guardado Inmediato Local (INFALIBLE)
           localStorage.setItem('itm_academico_v2', JSON.stringify(this.state));
           this.notify();
-
-          // 2. Guardado Secundario en la Nube
           try { 
             await fetch(APPS_SCRIPT_URL, { 
               method: 'POST', 
-              mode: 'no-cors', // Evita el bloqueo del navegador
+              mode: 'no-cors', 
               headers: { 'Content-Type': 'text/plain' },
               body: JSON.stringify(this.state) 
             }); 
@@ -440,19 +436,49 @@
         subscribe(l) { this.listeners.push(l); return () => this.listeners = this.listeners.filter(x => x !== l); }
         notify() { this.listeners.forEach(fn => fn(this.state)); }
         
-        // Métodos CRUD
         getActiveStudent() { return this.state.students.find(s => s.id === this.state.activeStudentId) || this.state.students[0]; }
         setActiveStudent(id) { if (this.state.students.some(s => s.id === id)) { this.state.activeStudentId = id; this.saveState(); } }
         getAllStudents() { return this.state.students; }
-        addStudent(name, program, semester) { const s = { id: 'std_' + Date.now(), name: name, program: program, semester: semester, subjects: [] }; this.state.students.push(s); this.state.activeStudentId = s.id; this.saveState(); }
-        updateStudent(id, data) { const s = this.state.students.find(x => x.id === id); if (s) { Object.assign(s, data); this.saveState(); } }
-        deleteStudent(id) { this.state.students = this.state.students.filter(x => x.id !== id); if (this.state.activeStudentId === id) this.state.activeStudentId = this.state.students[0]?.id; this.saveState(); }
-        addSubject(sId, data) { const s = this.state.students.find(x => x.id === sId); if (s) { s.subjects.push({ id: 'sub_' + Date.now(), name: data.name, credits: parseInt(data.credits)||3, code: data.code, evaluations: [] }); this.saveState(); } }
-        updateSubject(sId, subId, data) { const sub = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId); if (sub) { sub.name=data.name; sub.credits=parseInt(data.credits); sub.code=data.code; this.saveState(); } }
-        deleteSubject(sId, subId) { const s = this.state.students.find(x => x.id === sId); if (s) { s.subjects = s.subjects.filter(x => x.id !== subId); this.saveState(); } }
-        addEvaluation(sId, subId, data) { const sub = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId); if (sub) { sub.evaluations.push({ id: 'ev_' + Date.now(), name: data.name, type: data.type, weight: parseFloat(data.weight)||0, grade: parseFloat(data.grade)||0 }); this.saveState(); } }
-        updateEvaluation(sId, subId, evId, data) { const ev = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId)?.evaluations.find(x => x.id === evId); if (ev) { ev.name=data.name; ev.type=data.type; ev.weight=parseFloat(data.weight); ev.grade=parseFloat(data.grade); this.saveState(); } }
-        deleteEvaluation(sId, subId, evId) { const sub = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId); if (sub) { sub.evaluations = sub.evaluations.filter(x => x.id !== evId); this.saveState(); } }
+        
+        addStudent(name, program, semester) { 
+          const s = { id: 'std_' + Date.now(), name: name, program: program, semester: semester, subjects: [] }; 
+          this.state.students.push(s); this.state.activeStudentId = s.id; this.saveState(); 
+        }
+        updateStudent(id, data) { 
+          const s = this.state.students.find(x => x.id === id); 
+          if (s) { Object.assign(s, data); this.saveState(); } 
+        }
+        deleteStudent(id) { 
+          this.state.students = this.state.students.filter(x => x.id !== id); 
+          if (this.state.activeStudentId === id) this.state.activeStudentId = this.state.students[0]?.id; 
+          this.saveState(); 
+        }
+        
+        addSubject(sId, data) { 
+          const s = this.state.students.find(x => x.id === sId); 
+          if (s) { s.subjects.push({ id: 'sub_' + Date.now(), name: data.name, credits: parseInt(data.credits)||3, code: data.code, evaluations: [] }); this.saveState(); } 
+        }
+        updateSubject(sId, subId, data) { 
+          const sub = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId); 
+          if (sub) { sub.name=data.name; sub.credits=parseInt(data.credits); sub.code=data.code; this.saveState(); } 
+        }
+        deleteSubject(sId, subId) { 
+          const s = this.state.students.find(x => x.id === sId); 
+          if (s) { s.subjects = s.subjects.filter(x => x.id !== subId); this.saveState(); } 
+        }
+        
+        addEvaluation(sId, subId, data) { 
+          const sub = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId); 
+          if (sub) { sub.evaluations.push({ id: 'ev_' + Date.now(), name: data.name, type: data.type, weight: parseFloat(data.weight)||0, grade: parseFloat(data.grade)||0 }); this.saveState(); } 
+        }
+        updateEvaluation(sId, subId, evId, data) { 
+          const ev = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId)?.evaluations.find(x => x.id === evId); 
+          if (ev) { ev.name=data.name; ev.type=data.type; ev.weight=parseFloat(data.weight); ev.grade=parseFloat(data.grade); this.saveState(); } 
+        }
+        deleteEvaluation(sId, subId, evId) { 
+          const sub = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId); 
+          if (sub) { sub.evaluations = sub.evaluations.filter(x => x.id !== evId); this.saveState(); } 
+        }
       }
 
       const store = new AcademicStore();
@@ -571,9 +597,36 @@
           if (e.target.closest('[id^="btnClose"], [id^="btnCancel"]')) { document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); }
         });
 
-        document.getElementById('formStudent').addEventListener('submit', e => { e.preventDefault(); const id = document.getElementById('inputStudentId').value; const data = { name: document.getElementById('inputStudentName').value, program: document.getElementById('inputStudentProgram').value, semester: document.getElementById('inputStudentSemester').value }; if(id) store.updateStudent(id, data); else store.addStudent(data.name, data.program, data.semester); document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); });
-        document.getElementById('formSubject').addEventListener('submit', e => { e.preventDefault(); const id = document.getElementById('inputSubjectId').value; const data = { name: document.getElementById('inputSubjectName').value, code: document.getElementById('inputSubjectCode').value, credits: document.getElementById('inputSubjectCredits').value }; if(id) store.updateSubject(store.activeStudentId, id, data); else store.addSubject(store.activeStudentId, data); document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); });
-        document.getElementById('formEvaluation').addEventListener('submit', e => { e.preventDefault(); const sId = document.getElementById('inputEvalSubjectId').value; const eId = document.getElementById('inputEvalId').value; const data = { name: document.getElementById('inputEvalName').value, type: document.getElementById('inputEvalType').value, weight: document.getElementById('inputEvalWeight').value, grade: document.getElementById('inputEvalGrade').value }; if(eId) store.updateEvaluation(store.activeStudentId, sId, eId, data); else store.addEvaluation(store.activeStudentId, sId, data); document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); });
+        // REPARACIÓN DEFINITIVA: store.getActiveStudent().id
+        document.getElementById('formStudent').addEventListener('submit', e => { 
+          e.preventDefault(); 
+          const id = document.getElementById('inputStudentId').value; 
+          const data = { name: document.getElementById('inputStudentName').value, program: document.getElementById('inputStudentProgram').value, semester: document.getElementById('inputStudentSemester').value }; 
+          if(id) store.updateStudent(id, data); 
+          else store.addStudent(data.name, data.program, data.semester); 
+          document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); 
+        });
+
+        document.getElementById('formSubject').addEventListener('submit', e => { 
+          e.preventDefault(); 
+          const id = document.getElementById('inputSubjectId').value; 
+          const data = { name: document.getElementById('inputSubjectName').value, code: document.getElementById('inputSubjectCode').value, credits: document.getElementById('inputSubjectCredits').value }; 
+          const activeId = store.getActiveStudent().id; 
+          if(id) store.updateSubject(activeId, id, data); 
+          else store.addSubject(activeId, data); 
+          document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); 
+        });
+
+        document.getElementById('formEvaluation').addEventListener('submit', e => { 
+          e.preventDefault(); 
+          const sId = document.getElementById('inputEvalSubjectId').value; 
+          const eId = document.getElementById('inputEvalId').value; 
+          const data = { name: document.getElementById('inputEvalName').value, type: document.getElementById('inputEvalType').value, weight: document.getElementById('inputEvalWeight').value, grade: document.getElementById('inputEvalGrade').value }; 
+          const activeId = store.getActiveStudent().id; 
+          if(eId) store.updateEvaluation(activeId, sId, eId, data); 
+          else store.addEvaluation(activeId, sId, data); 
+          document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); 
+        });
       }
 
       store.subscribe(renderAll);
