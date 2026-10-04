@@ -2,270 +2,228 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ITM Académico | Gestor de Notas y Proyección 3.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ITM Académico | Dashboard Principal</title>
 
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            itm: {
-              navy: '#002F6C',
-              dark: '#001F47',
-              gold: '#F9A01B',
-              'gold-hover': '#e08c0d',
-              cyan: '#0094D8',
-              light: '#F8FAFC'
-            }
+            itm: { navy: '#002F6C', dark: '#001F47', gold: '#F9A01B', cyan: '#0094D8', red: '#E63946', green: '#2A9D8F' }
           }
         }
       }
     }
   </script>
 
-  <!-- Chart.js & Matter.js CDNs -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
-  <!-- ESTILOS VISUALES -->
+  <!-- Estilos Visuales -->
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
-
-    :root {
-      --itm-navy: #002F6C;
-      --itm-navy-dark: #001F47;
-      --itm-gold: #F9A01B;
-      --itm-gold-hover: #e08c0d;
-      --itm-cyan: #0094D8;
-      --itm-bg: #F1F5F9;
-    }
-
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--itm-bg);
-      color: #1E293B;
-      overflow-x: hidden;
-    }
-
-    .bg-itm-navy { background-color: var(--itm-navy); }
-    .bg-itm-navy-dark { background-color: var(--itm-navy-dark); }
-    .bg-itm-gold { background-color: var(--itm-gold); }
-    .bg-itm-cyan { background-color: var(--itm-cyan); }
-    .text-itm-navy { color: var(--itm-navy); }
-    .text-itm-gold { color: var(--itm-gold); }
-    .text-itm-cyan { color: var(--itm-cyan); }
-    .border-itm-navy { border-color: var(--itm-navy); }
-    .border-itm-gold { border-color: var(--itm-gold); }
-
-    .glass-panel {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(226, 232, 240, 0.8);
-    }
-
-    .glass-nav {
-      background: rgba(0, 47, 108, 0.95);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 3px solid var(--itm-gold);
-    }
-
-    body.antigravity-mode {
-      overflow: hidden !important;
-      user-select: none;
-    }
-
-    .physics-target {
-      will-change: transform;
-    }
-
-    .physics-active {
-      cursor: grab !important;
-      box-shadow: 0 25px 50px -12px rgba(0, 47, 108, 0.35), 0 0 0 2px var(--itm-gold) !important;
-      z-index: 999 !important;
-    }
-
-    .physics-active:active {
-      cursor: grabbing !important;
-    }
-
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+    .card { background: white; border: 1px solid #E2E8F0; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card-header { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748B; }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--itm-cyan); }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
-<body class="min-h-screen bg-slate-100 text-slate-800 antialiased selection:bg-itm-gold selection:text-itm-navy">
+<body class="min-h-screen flex flex-col">
 
   <!-- BARRA DE NAVEGACIÓN -->
-  <header class="sticky top-0 z-40 glass-nav text-white shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <header class="bg-itm-navy text-white sticky top-0 z-40 shadow-md">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 rounded-xl bg-itm-gold flex items-center justify-center shadow-md font-extrabold text-itm-navy text-xl tracking-tighter">ITM</div>
+          <div class="w-10 h-10 rounded-lg bg-itm-gold flex items-center justify-center font-extrabold text-itm-navy text-xl shadow-inner">ITM</div>
           <div>
-            <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
-              Gestión Académica
-              <span class="text-xs bg-itm-cyan/30 text-itm-cyan border border-itm-cyan/40 px-2 py-0.5 rounded-full font-medium">3.0 Target</span>
-            </h1>
-            <p class="text-xs text-slate-300 font-medium">Instituto Tecnológico Metropolitano</p>
+            <h1 class="text-lg font-bold flex items-center gap-2">Gestión Académica <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-medium border border-white/30">3.0 Target</span></h1>
+            <p class="text-xs text-blue-200">Instituto Tecnológico Metropolitano</p>
           </div>
         </div>
-        <div class="flex items-center space-x-2 sm:space-x-3">
-          <button id="btnCompareStudents" class="hidden sm:inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all duration-200">
-            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        <div>
+          <button id="btnCompareStudents" class="flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
             Comparar
-          </button>
-          <button id="btnToggleGravity" class="inline-flex items-center px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-itm-gold hover:bg-itm-gold-hover text-itm-navy shadow-md transition-all duration-300 transform active:scale-95">
-            <span>Activar Antigravedad 🚀</span>
-          </button>
-          <button id="btnShakePhysics" class="hidden inline-flex items-center px-3 py-2 text-xs font-bold rounded-xl bg-amber-500 hover:bg-amber-600 text-white shadow-md transition-all duration-200">
-            💥 Sacudir
           </button>
         </div>
       </div>
     </div>
   </header>
 
-  <div id="antigravityBanner" class="hidden bg-gradient-to-r from-itm-navy via-indigo-900 to-itm-navy text-white text-xs sm:text-sm py-2.5 px-4 text-center border-b-2 border-itm-gold font-medium sticky top-16 z-30 shadow-md">
-    🕹️ <strong class="text-itm-gold">Efecto Google Anti-Gravity Activo:</strong> Arrastra y lanza cualquier elemento con tu cursor o dedo.
-  </div>
+  <!-- CONTENEDOR PRINCIPAL 3 COLUMNAS -->
+  <div class="max-w-[1600px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow">
+    
+    <!-- COLUMNA IZQUIERDA: Informativa -->
+    <aside class="hidden lg:flex flex-col space-y-6 col-span-1">
+      
+      <!-- Motivación -->
+      <div class="card p-5 bg-gradient-to-br from-blue-50 to-white">
+        <h3 class="card-header flex items-center gap-2 mb-3 text-itm-navy"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Motivación Diaria</h3>
+        <p class="text-sm font-medium text-slate-700 italic">"El éxito en la ingeniería no se basa en no fallar nunca, sino en compilar y corregir los errores todos los días."</p>
+      </div>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- Accesos Oficiales ITM -->
+      <div class="card p-5">
+        <h3 class="card-header mb-4">Accesos Rápidos ITM</h3>
+        <ul class="space-y-3">
+          <li><a href="https://www.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-slate-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-navy mr-2"></span> Portal Principal ITM</a></li>
+          <li><a href="https://campus.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-slate-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-cyan mr-2"></span> Campus Virtual</a></li>
+          <li><a href="https://siaweb.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-slate-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-gold mr-2"></span> Sistema Académico (SIA)</a></li>
+          <li><a href="https://biblioteca.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-slate-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-slate-400 mr-2"></span> Biblioteca y Bases de Datos</a></li>
+        </ul>
+      </div>
 
-    <!-- SECCIÓN MULTI-ESTUDIANTE -->
-    <div class="glass-panel p-4 rounded-2xl shadow-sm physics-target">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-itm-navy">Modo Multi-Estudiante</span>
-            <span class="text-xs text-slate-500 font-semibold" id="studentCounterText">(3/5 estudiantes)</span>
+      <!-- Widget Clima Medellín -->
+      <div class="card p-0 overflow-hidden bg-gradient-to-t from-sky-100 to-sky-50 border-sky-200">
+        <div class="p-5">
+          <h3 class="card-header mb-2 text-sky-800">Medellín, CO</h3>
+          <div class="flex items-center justify-between">
+            <div class="text-4xl font-light text-slate-800 tracking-tighter">24<span class="text-2xl">°C</span></div>
+            <div class="text-sky-500"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg></div>
           </div>
-          <p class="text-xs text-slate-500">Conmuta entre perfiles para gestionar y proyectar notas</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <button id="btnOpenAddStudent" class="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg bg-itm-navy hover:bg-itm-dark text-white transition-colors duration-200">
-            + Nuevo Estudiante
-          </button>
+          <p class="text-xs text-slate-500 font-medium mt-1">Parcialmente nublado • Probabilidad de lluvia: 15%</p>
         </div>
       </div>
-      <div class="flex items-center gap-2 overflow-x-auto pt-3 pb-1" id="studentsTabsContainer"></div>
-    </div>
+    </aside>
 
-    <!-- TARJETA DEL ESTUDIANTE -->
-    <div class="glass-panel p-5 rounded-2xl shadow-sm border-l-4 border-itm-gold physics-target" id="studentHeaderCard">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="flex items-center space-x-4">
-          <div id="studentAvatar" class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-700 to-indigo-900 flex items-center justify-center text-white text-xl font-black shadow-md">
-            ITM
-          </div>
+    <!-- COLUMNA CENTRAL: Gestor de Notas (Ocupa 2 columnas en pantallas grandes) -->
+    <main class="col-span-1 lg:col-span-2 space-y-5">
+      
+      <!-- Multi-Estudiante -->
+      <div class="card p-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
           <div>
-            <h2 id="studentNameText" class="text-xl font-extrabold text-slate-900 tracking-tight">Cargando...</h2>
-            <p id="studentProgramText" class="text-xs sm:text-sm text-slate-600 font-medium">Cargando...</p>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-itm-navy">Modo Multi-Estudiante <span class="text-slate-500 normal-case ml-1" id="studentCounterText">(3/5)</span></h3>
+            <p class="text-xs text-slate-500">Conmuta entre perfiles para gestionar notas</p>
+          </div>
+          <button id="btnOpenAddStudent" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow transition-colors">+ Nuevo Estudiante</button>
+        </div>
+        <div class="flex items-center gap-2 overflow-x-auto" id="studentsTabsContainer"></div>
+      </div>
+
+      <!-- Tarjeta Perfil -->
+      <div class="card p-5 border-l-4 border-itm-gold" id="studentHeaderCard">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center space-x-4">
+            <div id="studentAvatar" class="w-12 h-12 rounded-xl bg-itm-navy flex items-center justify-center text-white text-lg font-bold shadow-md">DI</div>
+            <div>
+              <h2 id="studentNameText" class="text-lg font-extrabold text-slate-900 tracking-tight">Cargando...</h2>
+              <p id="studentProgramText" class="text-xs text-slate-600 font-medium mt-0.5">Cargando...</p>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button id="btnEditCurrentStudent" class="px-3 py-1.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Editar Perfil</button>
+            <button id="btnDeleteCurrentStudent" class="px-3 py-1.5 text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors">Eliminar</button>
           </div>
         </div>
-        <div class="flex items-center gap-2 self-start md:self-auto">
-          <button id="btnEditCurrentStudent" class="px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:text-itm-navy bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Editar Perfil</button>
-          <button id="btnDeleteCurrentStudent" class="px-2.5 py-1.5 text-xs font-medium text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors">Eliminar</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- MÉTRICAS -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="glass-panel p-4 rounded-2xl shadow-sm physics-target border-t-2 border-itm-navy">
-        <div class="flex items-center justify-between mb-1">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Promedio Semestre</span>
-        </div>
-        <div class="flex items-baseline space-x-2">
-          <span id="metricSemesterAvg" class="text-3xl font-extrabold text-slate-900 font-mono">0.00</span>
-          <span class="text-xs font-semibold text-slate-500">/ 5.0</span>
-        </div>
-        <div class="mt-2 text-xs font-medium" id="metricAvgBadge"><span class="text-slate-500">Calculado con créditos</span></div>
       </div>
 
-      <div class="glass-panel p-4 rounded-2xl shadow-sm physics-target border-t-2 border-emerald-500">
-        <div class="flex items-center justify-between mb-1">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Aprobadas (&ge; 3.0)</span>
+      <!-- Métricas (2x2) -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="card p-4 border-t-[3px] border-t-itm-navy">
+          <span class="card-header">Promedio Semestre</span>
+          <div class="flex items-baseline space-x-1 mt-2">
+            <span id="metricSemesterAvg" class="text-2xl font-extrabold text-slate-900 font-mono">0.00</span><span class="text-xs font-semibold text-slate-500">/ 5.0</span>
+          </div>
+          <p class="mt-1 text-[10px] text-slate-500">Calculado con créditos</p>
         </div>
-        <div class="flex items-baseline space-x-2">
-          <span id="metricPassedCount" class="text-3xl font-extrabold text-emerald-600 font-mono">0</span>
-          <span id="metricTotalSubjectsText" class="text-xs font-semibold text-slate-500">de 0 materias</span>
+        <div class="card p-4 border-t-[3px] border-t-[#2A9D8F]">
+          <span class="card-header">Aprobadas (&ge; 3.0)</span>
+          <div class="flex items-baseline space-x-1 mt-2">
+            <span id="metricPassedCount" class="text-2xl font-extrabold text-[#2A9D8F] font-mono">0</span><span id="metricTotalSubjectsText" class="text-xs font-semibold text-slate-500">de 0</span>
+          </div>
+          <p class="mt-1 text-[10px] text-[#2A9D8F] font-semibold">Nota mínima ITM: 3.0</p>
         </div>
-        <div class="mt-2 text-xs font-medium text-emerald-700">Nota mínima ITM: 3.0</div>
+        <div class="card p-4 border-t-[3px] border-t-[#E63946]">
+          <span class="card-header">En Riesgo Crítico</span>
+          <div class="flex items-baseline space-x-1 mt-2">
+            <span id="metricRiskCount" class="text-2xl font-extrabold text-[#E63946] font-mono">0</span><span class="text-xs font-semibold text-slate-500">req &gt; 5.0</span>
+          </div>
+          <p class="mt-1 text-[10px] text-[#E63946] font-semibold">Atención prioritaria</p>
+        </div>
+        <div class="card p-4 border-t-[3px] border-t-itm-gold">
+          <span class="card-header">Créditos Inscritos</span>
+          <div class="flex items-baseline space-x-1 mt-2">
+            <span id="metricCreditsCount" class="text-2xl font-extrabold text-slate-900 font-mono">0</span><span class="text-xs font-semibold text-slate-500">créditos</span>
+          </div>
+          <p class="mt-1 text-[10px] text-amber-600 font-semibold">Carga académica activa</p>
+        </div>
       </div>
 
-      <div class="glass-panel p-4 rounded-2xl shadow-sm physics-target border-t-2 border-rose-500">
-        <div class="flex items-center justify-between mb-1">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">En Riesgo Crítico</span>
+      <!-- Gráficas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="card p-4">
+          <h3 class="card-header mb-3">Progreso vs Meta ITM (3.0)</h3>
+          <div class="relative h-48 w-full"><canvas id="gradesBarChart"></canvas></div>
         </div>
-        <div class="flex items-baseline space-x-2">
-          <span id="metricRiskCount" class="text-3xl font-extrabold text-rose-600 font-mono">0</span>
-          <span class="text-xs font-semibold text-slate-500">requieren &gt; 5.0</span>
+        <div class="card p-4">
+          <h3 class="card-header mb-3">Estado del Semestre</h3>
+          <div class="relative h-48 w-full flex items-center justify-center"><canvas id="distributionDoughnutChart"></canvas></div>
         </div>
-        <div class="mt-2 text-xs font-medium text-rose-700">Atención prioritaria</div>
       </div>
 
-      <div class="glass-panel p-4 rounded-2xl shadow-sm physics-target border-t-2 border-itm-gold">
-        <div class="flex items-center justify-between mb-1">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Créditos Inscritos</span>
-        </div>
-        <div class="flex items-baseline space-x-2">
-          <span id="metricCreditsCount" class="text-3xl font-extrabold text-slate-900 font-mono">0</span>
-          <span class="text-xs font-semibold text-slate-500">créditos</span>
-        </div>
-        <div class="mt-2 text-xs font-medium text-amber-700">Carga académica activa</div>
-      </div>
-    </div>
-
-    <!-- GRÁFICAS -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-2 glass-panel p-5 rounded-2xl shadow-sm physics-target">
+      <!-- Listado de Materias -->
+      <div class="pt-2">
         <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">Materias del Semestre <span id="subjectCountBadge" class="text-xs px-2 py-0.5 rounded-full font-bold bg-itm-navy text-white">0/10</span></h3>
+          <button id="btnOpenAddSubject" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow">+ Matricular Nueva Materia</button>
+        </div>
+        <div id="subjectsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </div>
+    </main>
+
+    <!-- COLUMNA DERECHA: Herramientas y Tips -->
+    <aside class="hidden lg:flex flex-col space-y-6 col-span-1">
+      
+      <!-- IA y Herramientas -->
+      <div class="card p-5">
+        <h3 class="card-header mb-4 flex items-center gap-2"><svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg> Asistentes IA</h3>
+        <ul class="space-y-3">
+          <li><a href="https://chat.openai.com/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-200 transition group"><span class="text-sm font-semibold text-slate-700">ChatGPT</span> <svg class="w-4 h-4 text-slate-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
+          <li><a href="https://gemini.google.com/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-200 transition group"><span class="text-sm font-semibold text-slate-700">Google Gemini</span> <svg class="w-4 h-4 text-slate-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
+          <li><a href="https://www.perplexity.ai/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-200 transition group"><span class="text-sm font-semibold text-slate-700">Perplexity (Buscador)</span> <svg class="w-4 h-4 text-slate-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
+        </ul>
+      </div>
+
+      <!-- Google Apps Integradas -->
+      <div class="card p-5 border-t-4 border-t-blue-500">
+        <h3 class="card-header mb-4 flex items-center gap-2">Ecosistema Google</h3>
+        <div class="grid grid-cols-2 gap-2">
+          <a href="https://drive.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Drive"><span class="text-[10px] font-bold text-slate-600">Drive</span></a>
+          <a href="https://docs.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Google_Docs_logo_%282014-2020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Docs"><span class="text-[10px] font-bold text-slate-600">Docs</span></a>
+          <a href="https://calendar.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Calendar"><span class="text-[10px] font-bold text-slate-600">Calendar</span></a>
+          <a href="https://scholar.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Google_Scholar_logo.svg" class="w-6 h-6 mx-auto mb-1" alt="Scholar"><span class="text-[10px] font-bold text-slate-600">Scholar</span></a>
+        </div>
+      </div>
+
+      <!-- Noticias / Tips (Simulado) -->
+      <div class="card p-5">
+        <h3 class="card-header mb-4">Tips de Clase</h3>
+        <div class="space-y-4">
+          <div class="pb-3 border-b border-slate-100">
+            <h4 class="text-xs font-bold text-slate-800 mb-1">Regla del 20% en Lógica</h4>
+            <p class="text-[10px] text-slate-500 leading-relaxed">Antes de programar, dedica el 20% del tiempo a estructurar el algoritmo en papel. Te ahorrará horas de debugueo.</p>
+          </div>
           <div>
-            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Progreso de Notas vs Meta ITM (3.0)</h3>
+            <h4 class="text-xs font-bold text-slate-800 mb-1">Técnica Pomodoro</h4>
+            <p class="text-[10px] text-slate-500 leading-relaxed">Estudia 25 min y descansa 5 min. Durante la lectura de PDFs pesados aumenta la retención enormemente.</p>
           </div>
         </div>
-        <div class="relative h-64 w-full">
-          <canvas id="gradesBarChart"></canvas>
-        </div>
       </div>
 
-      <div class="glass-panel p-5 rounded-2xl shadow-sm physics-target">
-        <div class="mb-4">
-          <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Estado del Semestre</h3>
-        </div>
-        <div class="relative h-64 w-full flex items-center justify-center">
-          <canvas id="distributionDoughnutChart"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <!-- MATERIAS -->
-    <div class="space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-            Materias del Semestre
-            <span id="subjectCountBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-itm-navy text-white">0 / 10</span>
-          </h3>
-        </div>
-        <button id="btnOpenAddSubject" class="inline-flex items-center px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-itm-navy hover:bg-itm-dark text-white shadow-md transition-all duration-200">
-          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-          Matricular Nueva Materia
-        </button>
-      </div>
-      <div id="subjectsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
-    </div>
-  </main>
+    </aside>
+  </div>
 
   <!-- MODAL: MATERIA -->
   <div id="modalSubject" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-200">
+    <div class="card max-w-md w-full p-6 space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <h4 id="modalSubjectTitle" class="text-lg font-bold text-itm-navy">Matricular Materia ITM</h4>
         <button id="btnCloseSubjectModal" class="text-slate-400 hover:text-slate-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
@@ -273,22 +231,22 @@
       <form id="formSubject" class="space-y-4">
         <input type="hidden" id="inputSubjectId">
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre de la Materia *</label>
-          <input type="text" id="inputSubjectName" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nombre de la Materia *</label>
+          <input type="text" id="inputSubjectName" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Código (Opcional)</label>
-            <input type="text" id="inputSubjectCode" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm uppercase focus:ring-2 focus:ring-itm-navy focus:outline-none">
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Código (Opcional)</label>
+            <input type="text" id="inputSubjectCode" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-itm-navy focus:outline-none">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Créditos ITM *</label>
-            <input type="number" id="inputSubjectCredits" min="1" max="10" value="3" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Créditos ITM *</label>
+            <input type="number" id="inputSubjectCredits" min="1" max="10" value="3" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
           </div>
         </div>
-        <div class="flex items-center justify-end space-x-2 pt-3 border-t">
-          <button type="button" id="btnCancelSubject" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
-          <button type="submit" class="px-4 py-2 text-xs font-bold rounded-xl bg-itm-navy hover:bg-itm-dark text-white">Guardar Materia</button>
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t mt-4">
+          <button type="button" id="btnCancelSubject" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
+          <button type="submit" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white">Guardar Materia</button>
         </div>
       </form>
     </div>
@@ -296,7 +254,7 @@
 
   <!-- MODAL: EVALUACIÓN -->
   <div id="modalEvaluation" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-200">
+    <div class="card max-w-md w-full p-6 space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <h4 id="modalEvalTitle" class="text-lg font-bold text-itm-navy">Registrar Evaluación</h4>
         <button id="btnCloseEvalModal" class="text-slate-400 hover:text-slate-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
@@ -305,32 +263,28 @@
         <input type="hidden" id="inputEvalSubjectId">
         <input type="hidden" id="inputEvalId">
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre / Descripción *</label>
-          <input type="text" id="inputEvalName" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nombre / Descripción *</label>
+          <input type="text" id="inputEvalName" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tipo</label>
-            <select id="inputEvalType" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none bg-white">
-              <option value="Parcial">Parcial</option>
-              <option value="Quiz">Quiz</option>
-              <option value="Taller">Taller / Lab</option>
-              <option value="Proyecto">Proyecto</option>
-              <option value="Seguimiento">Seguimiento</option>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Tipo</label>
+            <select id="inputEvalType" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none bg-white">
+              <option value="Parcial">Parcial</option><option value="Quiz">Quiz</option><option value="Taller">Taller / Lab</option><option value="Proyecto">Proyecto</option><option value="Seguimiento">Seguimiento</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Peso (%) *</label>
-            <input type="number" id="inputEvalWeight" min="1" max="100" step="0.5" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Peso (%) *</label>
+            <input type="number" id="inputEvalWeight" min="1" max="100" step="0.5" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
           </div>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nota Obtenida (0.0 - 5.0) *</label>
-          <input type="number" id="inputEvalGrade" min="0.0" max="5.0" step="0.01" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none font-mono">
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nota Obtenida (0.0 - 5.0) *</label>
+          <input type="number" id="inputEvalGrade" min="0.0" max="5.0" step="0.01" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
-        <div class="flex items-center justify-end space-x-2 pt-3 border-t">
-          <button type="button" id="btnCancelEval" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
-          <button type="submit" class="px-4 py-2 text-xs font-bold rounded-xl bg-itm-navy hover:bg-itm-dark text-white">Guardar Evaluación</button>
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t mt-4">
+          <button type="button" id="btnCancelEval" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
+          <button type="submit" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white">Guardar Nota</button>
         </div>
       </form>
     </div>
@@ -338,7 +292,7 @@
 
   <!-- MODAL: ESTUDIANTE -->
   <div id="modalStudent" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-200">
+    <div class="card max-w-md w-full p-6 space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <h4 id="modalStudentTitle" class="text-lg font-bold text-itm-navy">Perfil de Estudiante</h4>
         <button id="btnCloseStudentModal" class="text-slate-400 hover:text-slate-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
@@ -346,20 +300,20 @@
       <form id="formStudent" class="space-y-4">
         <input type="hidden" id="inputStudentId">
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
-          <input type="text" id="inputStudentName" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
+          <input type="text" id="inputStudentName" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Programa Académico *</label>
-          <input type="text" id="inputStudentProgram" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Programa Académico *</label>
+          <input type="text" id="inputStudentProgram" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Semestre / Periodo</label>
-          <input type="text" id="inputStudentSemester" value="Semestre 2026-1" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Semestre / Periodo</label>
+          <input type="text" id="inputStudentSemester" value="Semestre 2026-1" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
-        <div class="flex items-center justify-end space-x-2 pt-3 border-t">
-          <button type="button" id="btnCancelStudent" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
-          <button type="submit" class="px-4 py-2 text-xs font-bold rounded-xl bg-itm-navy hover:bg-itm-dark text-white">Guardar Estudiante</button>
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t mt-4">
+          <button type="button" id="btnCancelStudent" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
+          <button type="submit" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white">Guardar Estudiante</button>
         </div>
       </form>
     </div>
@@ -367,34 +321,25 @@
 
   <!-- MODAL: COMPARADOR -->
   <div id="modalCompare" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b pb-3">
-        <div>
-          <h4 class="text-lg font-bold text-itm-navy">Comparador de Estudiantes ITM</h4>
-        </div>
+    <div class="card max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b pb-3 mb-4">
+        <h4 class="text-lg font-bold text-itm-navy">Comparador de Estudiantes ITM</h4>
         <button id="btnCloseCompareModal" class="text-slate-400 hover:text-slate-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs sm:text-sm">
+        <table class="w-full text-left text-sm whitespace-nowrap">
           <thead>
-            <tr class="bg-slate-100 text-slate-700 border-b">
-              <th class="p-3">Estudiante</th>
-              <th class="p-3">Programa</th>
-              <th class="p-3 text-center">Materias</th>
-              <th class="p-3 text-center">Créditos</th>
-              <th class="p-3 text-center">Promedio</th>
-              <th class="p-3 text-center">Aprobadas</th>
-              <th class="p-3 text-center">En Riesgo</th>
-              <th class="p-3 text-center">Acción</th>
+            <tr class="bg-slate-50 text-slate-500 border-b text-xs uppercase tracking-wider">
+              <th class="p-3 font-semibold">Estudiante</th><th class="p-3 font-semibold text-center">Materias</th><th class="p-3 font-semibold text-center">Créditos</th><th class="p-3 font-semibold text-center">Promedio</th><th class="p-3 font-semibold text-center">Aprobadas</th><th class="p-3 font-semibold text-center">Acción</th>
             </tr>
           </thead>
-          <tbody id="compareTableBody" class="divide-y"></tbody>
+          <tbody id="compareTableBody" class="divide-y divide-slate-100"></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- LÓGICA JAVASCRIPT INCRUSTADA -->
+  <!-- LÓGICA DE LA APLICACIÓN (Con Guardado Híbrido Infalible) -->
   <script>
     (function () {
       'use strict';
@@ -411,117 +356,103 @@
         evaluatedWeight = Math.min(100, Math.round(evaluatedWeight * 100) / 100);
         accumulatedGrade = Math.round(accumulatedGrade * 100) / 100;
         const remainingWeight = Math.round((100 - evaluatedWeight) * 100) / 100;
+        let requiredGrade = 0; let status = 'in_progress';
 
-        let requiredGrade = 0; let status = 'in_progress'; let alertMessage = ''; let badgeColor = 'bg-blue-100 text-blue-800 border-blue-300';
-
-        if (evaluations.length === 0) {
-          status = 'empty'; alertMessage = 'Sin notas aún. Registra tus evaluaciones.'; badgeColor = 'bg-slate-100 text-slate-700 border-slate-300';
-        } else if (accumulatedGrade >= ITM_PASSING_GRADE) {
-          status = 'passed'; alertMessage = `¡Materia Aprobada! 🎉 Ya acumulaste ${accumulatedGrade.toFixed(2)}.`; badgeColor = 'bg-emerald-100 text-emerald-800 border-emerald-300';
-        } else if (remainingWeight <= 0) {
-          status = 'failed'; alertMessage = `Materia reprobada con ${accumulatedGrade.toFixed(2)}.`; badgeColor = 'bg-rose-100 text-rose-800 border-rose-300';
-        } else {
-          const pointsNeeded = ITM_PASSING_GRADE - accumulatedGrade;
-          requiredGrade = Math.round((pointsNeeded / (remainingWeight / 100)) * 100) / 100;
-          if (requiredGrade > ITM_MAX_GRADE) {
-            status = 'critical'; alertMessage = `⚠️ En riesgo crítico: Necesitas ${requiredGrade.toFixed(2)} (supera 5.0).`; badgeColor = 'bg-red-100 text-red-800 border-red-300';
-          } else {
-            status = 'viable'; alertMessage = `Necesitas promediar al menos ${requiredGrade.toFixed(2)} en lo restante.`; badgeColor = 'bg-amber-100 text-amber-800 border-amber-300';
-          }
+        if (evaluations.length === 0) { status = 'empty'; }
+        else if (accumulatedGrade >= ITM_PASSING_GRADE) { status = 'passed'; } 
+        else if (remainingWeight <= 0) { status = 'failed'; } 
+        else {
+          requiredGrade = Math.round(((ITM_PASSING_GRADE - accumulatedGrade) / (remainingWeight / 100)) * 100) / 100;
+          status = requiredGrade > ITM_MAX_GRADE ? 'critical' : 'viable';
         }
-        const currentAverage = evaluatedWeight > 0 ? (accumulatedGrade / (evaluatedWeight / 100)) : 0;
-        return { evaluatedWeight, remainingWeight, accumulatedGrade, currentAverage: Math.round(currentAverage * 100) / 100, requiredGrade: Math.max(0, requiredGrade), status, alertMessage, badgeColor };
+        return { evaluatedWeight, remainingWeight, accumulatedGrade, requiredGrade: Math.max(0, requiredGrade), status };
       }
 
       function calculateSemesterMetrics(subjects = []) {
-        if (!subjects || subjects.length === 0) return { totalSubjects: 0, totalCredits: 0, semesterAverage: 0, passedSubjects: 0, criticalSubjects: 0, inProgressSubjects: 0 };
-        let totalCredits = 0; let weightedPoints = 0; let passedCount = 0; let criticalCount = 0; let inProgressCount = 0;
+        if (!subjects || subjects.length === 0) return { totalSubjects: 0, totalCredits: 0, semesterAverage: 0, passedSubjects: 0, criticalSubjects: 0 };
+        let totalCredits = 0; let weightedPoints = 0; let passedCount = 0; let criticalCount = 0;
         subjects.forEach(subject => {
           const credits = parseInt(subject.credits, 10) || 1; const calc = calculateSubjectStatus(subject.evaluations || []);
           totalCredits += credits; weightedPoints += (calc.accumulatedGrade * credits);
           if (calc.status === 'passed') passedCount++;
           else if (calc.status === 'critical' || calc.status === 'failed') criticalCount++;
-          else inProgressCount++;
         });
-        const semesterAverage = totalCredits > 0 ? (weightedPoints / totalCredits) : 0;
-        return { totalSubjects: subjects.length, totalCredits, semesterAverage: Math.round(semesterAverage * 100) / 100, passedSubjects: passedCount, criticalSubjects: criticalCount, inProgressSubjects: inProgressCount };
+        return { totalSubjects: subjects.length, totalCredits, semesterAverage: totalCredits > 0 ? (weightedPoints / totalCredits) : 0, passedSubjects: passedCount, criticalSubjects: criticalCount };
       }
 
       const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvXovX37K3dU2qBcSJPC49RPHDis0DM9z-kAsEsvf20jKfX3fKbczVSfVScJ1eHGIZ/exec';
       const MAX_STUDENTS = 5; const MAX_SUBJECTS = 10;
       
       const DIEGO_STUDENT = {
-        id: 'std_diego', name: 'DIEGO ALEJANDRO QUINTERO CANO', document: 'CC 16076155', carne: '26119002', program: 'INGENIERÍA DE SISTEMAS (Pensum 5-1)', semester: 'Período 2026-2', avatarColor: 'from-blue-700 to-indigo-900',
+        id: 'std_diego', name: 'DIEGO ALEJANDRO QUINTERO CANO', program: 'INGENIERÍA DE SISTEMAS (Pensum 5-1)', semester: 'Período 2026-2',
         subjects: [
-          { id: 'sub_1', name: 'ADMINISTRACIÓN DE BASES DE DATOS', code: '190304004-AP-3', credits: 3, evaluations: [] },
-          { id: 'sub_2', name: 'ANÁLISIS DE ALGORITMOS', code: '190304006-3', credits: 3, evaluations: [] },
-          { id: 'sub_3', name: 'APRENDIZAJE COMPUTACIONAL', code: '190304012-1', credits: 3, evaluations: [] },
-          { id: 'sub_4', name: 'ARQUITECTURA DE COMPUTADORES', code: '190304010-1', credits: 3, evaluations: [] },
-          { id: 'sub_5', name: 'ARQUITECTURA DE SOFTWARE I', code: '190304005-1', credits: 3, evaluations: [] },
-          { id: 'sub_6', name: 'ELECTIVA II', code: '190202022-2', credits: 2, evaluations: [{ id: 'ev_61', name: 'Evaluación 1', type: 'Seguimiento', weight: 20, grade: 5.0 }] },
-          { id: 'sub_7', name: 'INTELIGENCIA DE NEGOCIOS', code: '190304015-2', credits: 3, evaluations: [] },
-          { id: 'sub_8', name: 'INTRODUCCIÓN A LA VISIÓN ARTIFICIAL', code: '190202024-2', credits: 2, evaluations: [] }
+          { id: 'sub_1', name: 'ADMINISTRACIÓN DE BASES DE DATOS', credits: 3, evaluations: [] },
+          { id: 'sub_2', name: 'ANÁLISIS DE ALGORITMOS', credits: 3, evaluations: [] },
+          { id: 'sub_3', name: 'APRENDIZAJE COMPUTACIONAL', credits: 3, evaluations: [] },
+          { id: 'sub_4', name: 'ARQUITECTURA DE COMPUTADORES', credits: 3, evaluations: [] },
+          { id: 'sub_5', name: 'ARQUITECTURA DE SOFTWARE I', credits: 3, evaluations: [] },
+          { id: 'sub_6', name: 'ELECTIVA II', credits: 2, evaluations: [{ id: 'ev_61', name: 'Evaluación 1', type: 'Seguimiento', weight: 20, grade: 5.0 }] },
+          { id: 'sub_7', name: 'INTELIGENCIA DE NEGOCIOS', credits: 3, evaluations: [] },
+          { id: 'sub_8', name: 'INTRODUCCIÓN A LA VISIÓN ARTIFICIAL', credits: 2, evaluations: [] }
         ]
       };
 
       class AcademicStore {
-        constructor() { this.state = { activeStudentId: 'std_diego', students: [ DIEGO_STUDENT ] }; this.listeners = []; this.loadStateFromSheets(); }
+        constructor() {
+          // GUARDADO HÍBRIDO: Primero revisa la memoria local para no perder nunca datos
+          const localData = localStorage.getItem('itm_academico_v2');
+          if (localData) {
+            this.state = JSON.parse(localData);
+          } else {
+            this.state = { activeStudentId: 'std_diego', students: [ DIEGO_STUDENT ] };
+          }
+          this.listeners = [];
+          this.loadStateFromSheets();
+        }
+
         async loadStateFromSheets() {
           try {
             const res = await fetch(APPS_SCRIPT_URL); const data = await res.json();
-            if (data && data.datos) { this.state = JSON.parse(data.datos); this.notify(); } else this.saveState();
-          } catch (e) { console.error('Error descargando datos:', e); }
+            if (data && data.datos) { 
+              this.state = JSON.parse(data.datos); 
+              localStorage.setItem('itm_academico_v2', JSON.stringify(this.state)); // Asegura caché
+              this.notify(); 
+            }
+          } catch (e) { console.warn('Usando base local temporalmente.'); }
         }
+
         async saveState() {
+          // 1. Guardado Inmediato Local (INFALIBLE)
+          localStorage.setItem('itm_academico_v2', JSON.stringify(this.state));
           this.notify();
-          try { await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(this.state) }); } catch (e) { console.error('Error guardando:', e); }
+
+          // 2. Guardado Secundario en la Nube
+          try { 
+            await fetch(APPS_SCRIPT_URL, { 
+              method: 'POST', 
+              mode: 'no-cors', // Evita el bloqueo del navegador
+              headers: { 'Content-Type': 'text/plain' },
+              body: JSON.stringify(this.state) 
+            }); 
+          } catch (e) { console.log('Sincronización en segundo plano pendiente.'); }
         }
+
         subscribe(l) { this.listeners.push(l); return () => this.listeners = this.listeners.filter(x => x !== l); }
         notify() { this.listeners.forEach(fn => fn(this.state)); }
+        
+        // Métodos CRUD
         getActiveStudent() { return this.state.students.find(s => s.id === this.state.activeStudentId) || this.state.students[0]; }
         setActiveStudent(id) { if (this.state.students.some(s => s.id === id)) { this.state.activeStudentId = id; this.saveState(); } }
         getAllStudents() { return this.state.students; }
-        addStudent(name, program, semester) {
-          const s = { id: 'std_' + Date.now(), name: name || 'Nuevo Estudiante', program: program || 'ITM', semester, avatarColor: 'from-blue-600 to-indigo-800', subjects: [] };
-          this.state.students.push(s); this.state.activeStudentId = s.id; this.saveState();
-        }
-        updateStudent(id, { name, program, semester }) {
-          const s = this.state.students.find(x => x.id === id); if (!s) return;
-          s.name = name; s.program = program; s.semester = semester; this.saveState();
-        }
-        deleteStudent(id) {
-          this.state.students = this.state.students.filter(x => x.id !== id);
-          if (this.state.activeStudentId === id) this.state.activeStudentId = this.state.students[0].id; this.saveState();
-        }
-        addSubject(sId, { name, code, credits }) {
-          const s = this.state.students.find(x => x.id === sId); if (!s) return;
-          s.subjects.push({ id: 'sub_' + Date.now(), name, code, credits: parseInt(credits)||3, evaluations: [] }); this.saveState();
-        }
-        updateSubject(sId, subId, { name, code, credits }) {
-          const s = this.state.students.find(x => x.id === sId); if (!s) return;
-          const sub = s.subjects.find(x => x.id === subId); if (!sub) return;
-          sub.name = name; sub.code = code; sub.credits = parseInt(credits)||3; this.saveState();
-        }
-        deleteSubject(sId, subId) {
-          const s = this.state.students.find(x => x.id === sId); if (!s) return;
-          s.subjects = s.subjects.filter(x => x.id !== subId); this.saveState();
-        }
-        addEvaluation(sId, subId, { name, type, weight, grade }) {
-          const s = this.state.students.find(x => x.id === sId); if (!s) return;
-          const sub = s.subjects.find(x => x.id === subId); if (!sub) return;
-          sub.evaluations.push({ id: 'ev_' + Date.now(), name, type, weight: parseFloat(weight)||0, grade: parseFloat(grade)||0 }); this.saveState();
-        }
-        updateEvaluation(sId, subId, evId, { name, type, weight, grade }) {
-          const s = this.state.students.find(x => x.id === sId); if (!s) return;
-          const sub = s.subjects.find(x => x.id === subId); if (!sub) return;
-          const ev = sub.evaluations.find(x => x.id === evId); if (!ev) return;
-          ev.name = name; ev.type = type; ev.weight = parseFloat(weight); ev.grade = parseFloat(grade); this.saveState();
-        }
-        deleteEvaluation(sId, subId, evId) {
-          const s = this.state.students.find(x => x.id === sId); if (!s) return;
-          const sub = s.subjects.find(x => x.id === subId); if (!sub) return;
-          sub.evaluations = sub.evaluations.filter(x => x.id !== evId); this.saveState();
-        }
+        addStudent(name, program, semester) { const s = { id: 'std_' + Date.now(), name: name, program: program, semester: semester, subjects: [] }; this.state.students.push(s); this.state.activeStudentId = s.id; this.saveState(); }
+        updateStudent(id, data) { const s = this.state.students.find(x => x.id === id); if (s) { Object.assign(s, data); this.saveState(); } }
+        deleteStudent(id) { this.state.students = this.state.students.filter(x => x.id !== id); if (this.state.activeStudentId === id) this.state.activeStudentId = this.state.students[0]?.id; this.saveState(); }
+        addSubject(sId, data) { const s = this.state.students.find(x => x.id === sId); if (s) { s.subjects.push({ id: 'sub_' + Date.now(), name: data.name, credits: parseInt(data.credits)||3, code: data.code, evaluations: [] }); this.saveState(); } }
+        updateSubject(sId, subId, data) { const sub = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId); if (sub) { sub.name=data.name; sub.credits=parseInt(data.credits); sub.code=data.code; this.saveState(); } }
+        deleteSubject(sId, subId) { const s = this.state.students.find(x => x.id === sId); if (s) { s.subjects = s.subjects.filter(x => x.id !== subId); this.saveState(); } }
+        addEvaluation(sId, subId, data) { const sub = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId); if (sub) { sub.evaluations.push({ id: 'ev_' + Date.now(), name: data.name, type: data.type, weight: parseFloat(data.weight)||0, grade: parseFloat(data.grade)||0 }); this.saveState(); } }
+        updateEvaluation(sId, subId, evId, data) { const ev = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId)?.evaluations.find(x => x.id === evId); if (ev) { ev.name=data.name; ev.type=data.type; ev.weight=parseFloat(data.weight); ev.grade=parseFloat(data.grade); this.saveState(); } }
+        deleteEvaluation(sId, subId, evId) { const sub = this.state.students.find(x => x.id === sId)?.subjects.find(x => x.id === subId); if (sub) { sub.evaluations = sub.evaluations.filter(x => x.id !== evId); this.saveState(); } }
       }
 
       const store = new AcademicStore();
@@ -531,20 +462,20 @@
         const barCtx = document.getElementById('gradesBarChart'); const pieCtx = document.getElementById('distributionDoughnutChart');
         if (!barCtx || !pieCtx || typeof Chart === 'undefined') return;
 
-        const labels = subjects.map(s => s.name.substring(0, 16) + '...');
+        const labels = subjects.map(s => s.name.substring(0, 12) + '...');
         const accumulatedGrades = subjects.map(s => calculateSubjectStatus(s.evaluations).accumulatedGrade);
         const bgColors = subjects.map(s => {
           const st = calculateSubjectStatus(s.evaluations).status;
-          return st==='passed' ? 'rgba(16, 185, 129, 0.7)' : st==='critical'||st==='failed' ? 'rgba(239, 68, 68, 0.7)' : st==='viable' ? 'rgba(245, 158, 11, 0.7)' : 'rgba(148, 163, 184, 0.5)';
+          return st==='passed' ? '#2A9D8F' : st==='critical'||st==='failed' ? '#E63946' : st==='viable' ? '#F9A01B' : '#CBD5E1';
         });
         
         if (gradesBarChart) { gradesBarChart.data.labels = labels; gradesBarChart.data.datasets[0].data = accumulatedGrades; gradesBarChart.data.datasets[0].backgroundColor = bgColors; gradesBarChart.data.datasets[1].data = Array(subjects.length).fill(3.0); gradesBarChart.update(); }
-        else { gradesBarChart = new Chart(barCtx.getContext('2d'), { type: 'bar', data: { labels, datasets: [{ label: 'Nota Acumulada', data: accumulatedGrades, backgroundColor: bgColors, borderRadius: 6, order: 2 }, { type: 'line', label: 'Meta ITM (3.0)', data: Array(subjects.length).fill(3.0), borderColor: '#002F6C', borderDash: [6,4], fill: false, order: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 5 } } } }); }
+        else { gradesBarChart = new Chart(barCtx.getContext('2d'), { type: 'bar', data: { labels, datasets: [{ label: 'Nota Acumulada', data: accumulatedGrades, backgroundColor: bgColors, borderRadius: 4, order: 2 }, { type: 'line', label: 'Meta ITM (3.0)', data: Array(subjects.length).fill(3.0), borderColor: '#002F6C', borderDash: [5,5], fill: false, order: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 5 } }, plugins: { legend: { display: false } } } }); }
 
         let p=0, v=0, c=0, e=0;
         subjects.forEach(s => { const st = calculateSubjectStatus(s.evaluations).status; if(st==='passed') p++; else if(st==='viable') v++; else if(st==='critical'||st==='failed') c++; else e++; });
         if (distributionDoughnutChart) { distributionDoughnutChart.data.datasets[0].data = [p,v,c,e]; distributionDoughnutChart.update(); }
-        else { distributionDoughnutChart = new Chart(pieCtx.getContext('2d'), { type: 'doughnut', data: { labels: ['Aprobadas', 'Viables', 'En Riesgo', 'Sin Evaluar'], datasets: [{ data: [p,v,c,e], backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#94a3b8'] }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '65%' } }); }
+        else { distributionDoughnutChart = new Chart(pieCtx.getContext('2d'), { type: 'doughnut', data: { labels: ['Aprobadas', 'Viables', 'En Riesgo', 'Sin Evaluar'], datasets: [{ data: [p,v,c,e], backgroundColor: ['#2A9D8F', '#F9A01B', '#E63946', '#94A3B8'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 10 } } } } }); }
       }
 
       function escapeHtml(text) { return String(text||'').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
@@ -553,10 +484,10 @@
         const student = store.getActiveStudent(); const students = store.getAllStudents(); const subjects = student ? student.subjects : [];
         if (!student) return;
 
-        document.getElementById('studentCounterText').textContent = `(${students.length}/${MAX_STUDENTS} estudiantes)`;
+        document.getElementById('studentCounterText').textContent = `(${students.length}/${MAX_STUDENTS})`;
         document.getElementById('studentsTabsContainer').innerHTML = students.map(s => `
-          <button data-student-id="${s.id}" class="student-tab-btn px-3.5 py-2 rounded-xl text-xs font-bold border flex-shrink-0 ${s.id === student.id ? 'bg-itm-navy text-white' : 'bg-white text-slate-700'}">
-            ${escapeHtml(s.name)}
+          <button data-student-id="${s.id}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors border ${s.id === student.id ? 'bg-itm-navy text-white border-itm-navy' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}">
+            ${escapeHtml(s.name.toUpperCase())}
           </button>`).join('');
 
         document.getElementById('studentNameText').textContent = student.name;
@@ -570,73 +501,47 @@
         document.getElementById('metricRiskCount').textContent = metrics.criticalSubjects;
         document.getElementById('metricCreditsCount').textContent = metrics.totalCredits;
 
-        document.getElementById('subjectCountBadge').textContent = `${subjects.length} / 10`;
+        document.getElementById('subjectCountBadge').textContent = `${subjects.length}/10`;
         const container = document.getElementById('subjectsContainer');
         
         if (subjects.length === 0) {
-          container.innerHTML = `<div class="col-span-full glass-panel p-8 text-center rounded-2xl border-dashed"><h4 class="font-bold mb-3">No hay materias</h4><button id="btnEmptyAddSubject" class="bg-itm-navy text-white px-4 py-2 rounded-xl text-xs font-bold">+ Matricular Primera Materia</button></div>`;
+          container.innerHTML = `<div class="col-span-full card p-10 text-center"><p class="text-slate-500 mb-4">No hay materias registradas para este periodo.</p><button id="btnEmptyAddSubject" class="bg-itm-navy text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow">+ Matricular Primera Materia</button></div>`;
         } else {
           container.innerHTML = subjects.map(sub => {
             const calc = calculateSubjectStatus(sub.evaluations);
             return `
-              <div class="glass-panel rounded-2xl p-5 physics-target flex flex-col justify-between">
-                <div>
-                  <div class="flex justify-between items-start mb-3">
-                    <div><h4 class="font-bold text-sm text-slate-900">${escapeHtml(sub.name)}</h4><p class="text-xs text-slate-500">${sub.credits} créditos</p></div>
-                    <div class="flex gap-2">
-                      <button data-action="edit-subject" data-subject-id="${sub.id}" class="text-slate-400 hover:text-itm-navy p-1">✏️</button>
-                      <button data-action="delete-subject" data-subject-id="${sub.id}" class="text-slate-400 hover:text-rose-600 p-1">🗑️</button>
+              <div class="card p-0 flex flex-col justify-between overflow-hidden">
+                <div class="p-4">
+                  <div class="flex justify-between items-start mb-4">
+                    <div><h4 class="font-extrabold text-[13px] text-slate-900 uppercase">${escapeHtml(sub.name)}</h4><p class="text-xs text-slate-500 mt-1">${sub.credits} créditos</p></div>
+                    <div class="flex gap-1 ml-2">
+                      <button data-action="edit-subject" data-subject-id="${sub.id}" class="text-slate-400 hover:text-itm-gold"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button>
+                      <button data-action="delete-subject" data-subject-id="${sub.id}" class="text-slate-400 hover:text-rose-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
                     </div>
                   </div>
-                  <div class="p-3 rounded-xl border mb-3 ${calc.badgeColor} flex justify-between items-center">
-                    <div><span class="text-[10px] uppercase font-bold block">Acumulado</span><span class="font-mono text-xl font-bold">${calc.accumulatedGrade.toFixed(2)}</span></div>
-                    <div class="text-right"><span class="text-[10px] uppercase font-bold block">Falta para 3.0</span><span class="font-mono text-xl font-bold">${calc.status==='passed'?'✓ 0.0':calc.requiredGrade.toFixed(2)}</span></div>
+                  <div class="bg-slate-50 rounded-lg p-3 flex justify-between items-center mb-4 border border-slate-100">
+                    <div><span class="text-[9px] uppercase font-bold text-slate-500 block mb-0.5">Acumulado</span><span class="font-mono text-lg font-black text-slate-900">${calc.accumulatedGrade.toFixed(2)}</span></div>
+                    <div class="text-right"><span class="text-[9px] uppercase font-bold text-slate-500 block mb-0.5">Falta para 3.0</span><span class="font-mono text-lg font-black ${calc.status==='passed'?'text-[#2A9D8F]':calc.status==='critical'?'text-[#E63946]':'text-slate-900'}">${calc.status==='passed'?'0.00':calc.requiredGrade.toFixed(2)}</span></div>
                   </div>
-                  <div class="space-y-1 mb-3">
-                    ${sub.evaluations.map(ev => `<div class="flex justify-between items-center text-xs bg-slate-50 p-2 rounded-lg border">
-                      <span class="font-bold text-slate-700">${escapeHtml(ev.name)} (${ev.weight}%)</span>
-                      <span><span class="font-mono font-bold bg-white px-1.5 py-0.5 border rounded mr-2">${ev.grade.toFixed(1)}</span> <button data-action="delete-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-rose-500 hover:text-rose-700">✖</button></span>
-                    </div>`).join('')}
+                  <div class="space-y-1.5">
+                    ${sub.evaluations.map(ev => `
+                      <div class="flex justify-between items-center text-[11px] group">
+                        <span class="font-medium text-slate-600 truncate mr-2">${escapeHtml(ev.name)} <span class="text-slate-400">(${ev.weight}%)</span></span>
+                        <div class="flex items-center shrink-0">
+                          <span class="font-mono font-bold text-slate-800">${ev.grade.toFixed(2)}</span>
+                          <button data-action="delete-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-slate-300 hover:text-rose-500 ml-2 opacity-0 group-hover:opacity-100 transition-opacity"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
+                        </div>
+                      </div>`).join('')}
                   </div>
                 </div>
-                <button data-action="add-eval" data-subject-id="${sub.id}" class="w-full bg-slate-100 hover:bg-itm-navy hover:text-white text-itm-navy text-xs font-bold py-2 rounded-xl transition-colors">+ Registrar Evaluación</button>
+                <button data-action="add-eval" data-subject-id="${sub.id}" class="w-full bg-slate-50 hover:bg-slate-100 text-[#002F6C] text-xs font-bold py-3 border-t border-slate-100 transition-colors">+ Registrar Evaluación</button>
               </div>`;
           }).join('');
         }
         updateCharts(subjects);
       }
 
-      // Físicas Matter.js
-      let engine = null, runner = null, isAntiGravityActive = false;
-      function toggleGravity() {
-        if(isAntiGravityActive) { location.reload(); return; }
-        if(typeof Matter === 'undefined') { alert('Motor de físicas cargando...'); return; }
-        isAntiGravityActive = true; document.body.classList.add('antigravity-mode');
-        document.getElementById('antigravityBanner').classList.remove('hidden'); document.getElementById('btnShakePhysics').classList.remove('hidden');
-        document.getElementById('btnToggleGravity').innerHTML = '<span>Restaurar Gravedad</span>'; document.getElementById('btnToggleGravity').className = 'inline-flex items-center px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-rose-600 text-white shadow-md transition-all';
-        
-        const { Engine, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
-        engine = Engine.create({ gravity: { x: 0, y: 1, scale: 0.001 } });
-        const w = window.innerWidth, h = window.innerHeight;
-        Composite.add(engine.world, [Bodies.rectangle(w/2, h+60, w*2, 120, {isStatic:true}), Bodies.rectangle(-60, h/2, 120, h*3, {isStatic:true}), Bodies.rectangle(w+60, h/2, 120, h*3, {isStatic:true}), Bodies.rectangle(w/2, -260, w*2, 120, {isStatic:true})]);
-        
-        const bodies = [];
-        document.querySelectorAll('.physics-target').forEach(el => {
-          const r = el.getBoundingClientRect(); el.style.width=r.width+'px'; el.style.height=r.height+'px'; el.style.position='fixed'; el.style.left='0px'; el.style.top='0px'; el.style.margin='0px'; el.classList.add('physics-active');
-          const b = Bodies.rectangle(r.left+r.width/2, r.top+r.height/2, r.width, r.height, { restitution:0.6, friction:0.2 }); Matter.Body.setAngularVelocity(b, (Math.random()-0.5)*0.05); Composite.add(engine.world, b); bodies.push({el, b, w:r.width, h:r.height});
-        });
-        
-        Composite.add(engine.world, MouseConstraint.create(engine, { mouse: Mouse.create(document.body), constraint: { stiffness: 0.2, render: { visible: false } } }));
-        Events.on(engine, 'afterUpdate', () => bodies.forEach(x => x.el.style.transform = `translate3d(${x.b.position.x-x.w/2}px, ${x.b.position.y-x.h/2}px, 0) rotate(${x.b.angle}rad)`));
-        window.addEventListener('deviceorientation', e => { if(isAntiGravityActive){ engine.gravity.x=Math.max(-1.5, Math.min(1.5, (e.gamma||0)/40)); engine.gravity.y=Math.max(-1.5, Math.min(1.5, (e.beta||0)/40)); } }, true);
-        runner = Runner.create(); Runner.run(runner, engine);
-      }
-
-      // Eventos Globales y Modales
       function setupEvents() {
-        document.getElementById('btnToggleGravity').addEventListener('click', toggleGravity);
-        document.getElementById('btnShakePhysics').addEventListener('click', () => { if(engine) engine.world.bodies.forEach(b => { if(!b.isStatic) Matter.Body.applyForce(b, b.position, {x:(Math.random()-0.5)*0.1, y:-0.1}) }) });
-        
         document.addEventListener('click', e => {
           const s = store.getActiveStudent();
           if (e.target.closest('.student-tab-btn')) store.setActiveStudent(e.target.closest('.student-tab-btn').dataset.studentId);
@@ -647,7 +552,7 @@
           }
           if (e.target.closest('#btnDeleteCurrentStudent')) { if(confirm('¿Eliminar estudiante?')) store.deleteStudent(s.id); }
           if (e.target.closest('#btnCompareStudents')) { 
-             document.getElementById('compareTableBody').innerHTML = store.getAllStudents().map(st => { const m = calculateSemesterMetrics(st.subjects); return `<tr><td class="p-3 font-bold">${st.name}</td><td class="p-3 text-center">${m.totalSubjects}</td><td class="p-3 text-center font-bold text-itm-navy">${m.semesterAverage.toFixed(2)}</td><td class="p-3 text-center"><button data-switch-to="${st.id}" class="bg-itm-navy text-white px-2 py-1 rounded text-xs">Ver</button></td></tr>`; }).join('');
+             document.getElementById('compareTableBody').innerHTML = store.getAllStudents().map(st => { const m = calculateSemesterMetrics(st.subjects); const pass = m.semesterAverage >= 3.0; return `<tr class="hover:bg-slate-50"><td class="p-3 font-semibold text-slate-800">${st.name}</td><td class="p-3 text-center text-slate-600">${m.totalSubjects}</td><td class="p-3 text-center text-slate-600">${m.totalCredits}</td><td class="p-3 text-center"><span class="font-mono font-bold px-2 py-0.5 rounded ${pass?'bg-emerald-100 text-emerald-800':'bg-rose-100 text-rose-800'}">${m.semesterAverage.toFixed(2)}</span></td><td class="p-3 text-center font-bold text-emerald-600">${m.passedSubjects}</td><td class="p-3 text-center"><button data-switch-to="${st.id}" class="bg-itm-navy hover:bg-itm-dark text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow">Ver Notas</button></td></tr>`; }).join('');
              document.getElementById('modalCompare').classList.remove('hidden');
           }
           if (e.target.closest('[data-switch-to]')) { store.setActiveStudent(e.target.closest('[data-switch-to]').dataset.switchTo); document.getElementById('modalCompare').classList.add('hidden'); }
@@ -655,7 +560,7 @@
           const actionBtn = e.target.closest('[data-action]');
           if (actionBtn && s) {
             const act = actionBtn.dataset.action; const subId = actionBtn.dataset.subjectId;
-            if (act === 'delete-subject') { if(confirm('¿Eliminar materia?')) store.deleteSubject(s.id, subId); }
+            if (act === 'delete-subject') { if(confirm('¿Eliminar materia y sus notas?')) store.deleteSubject(s.id, subId); }
             if (act === 'edit-subject') {
               const sub = s.subjects.find(x => x.id === subId); if(!sub) return;
               document.getElementById('inputSubjectId').value = sub.id; document.getElementById('inputSubjectName').value = sub.name; document.getElementById('inputSubjectCode').value = sub.code; document.getElementById('inputSubjectCredits').value = sub.credits; document.getElementById('modalSubject').classList.remove('hidden');
@@ -663,13 +568,12 @@
             if (act === 'add-eval') { document.getElementById('formEvaluation').reset(); document.getElementById('inputEvalSubjectId').value = subId; document.getElementById('inputEvalId').value=''; document.getElementById('modalEvaluation').classList.remove('hidden'); }
             if (act === 'delete-eval') { store.deleteEvaluation(s.id, subId, actionBtn.dataset.evalId); }
           }
-
           if (e.target.closest('[id^="btnClose"], [id^="btnCancel"]')) { document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); }
         });
 
-        document.getElementById('formStudent').addEventListener('submit', e => { e.preventDefault(); const id = document.getElementById('inputStudentId').value; const data = { name: document.getElementById('inputStudentName').value, program: document.getElementById('inputStudentProgram').value, semester: document.getElementById('inputStudentSemester').value }; if(id) store.updateStudent(id, data); else store.addStudent(data.name, data.program, data.semester); document.getElementById('modalStudent').classList.add('hidden'); });
-        document.getElementById('formSubject').addEventListener('submit', e => { e.preventDefault(); const id = document.getElementById('inputSubjectId').value; const data = { name: document.getElementById('inputSubjectName').value, code: document.getElementById('inputSubjectCode').value, credits: document.getElementById('inputSubjectCredits').value }; if(id) store.updateSubject(store.activeStudentId, id, data); else store.addSubject(store.activeStudentId, data); document.getElementById('modalSubject').classList.add('hidden'); });
-        document.getElementById('formEvaluation').addEventListener('submit', e => { e.preventDefault(); const sId = document.getElementById('inputEvalSubjectId').value; const eId = document.getElementById('inputEvalId').value; const data = { name: document.getElementById('inputEvalName').value, type: document.getElementById('inputEvalType').value, weight: document.getElementById('inputEvalWeight').value, grade: document.getElementById('inputEvalGrade').value }; if(eId) store.updateEvaluation(store.activeStudentId, sId, eId, data); else store.addEvaluation(store.activeStudentId, sId, data); document.getElementById('modalEvaluation').classList.add('hidden'); });
+        document.getElementById('formStudent').addEventListener('submit', e => { e.preventDefault(); const id = document.getElementById('inputStudentId').value; const data = { name: document.getElementById('inputStudentName').value, program: document.getElementById('inputStudentProgram').value, semester: document.getElementById('inputStudentSemester').value }; if(id) store.updateStudent(id, data); else store.addStudent(data.name, data.program, data.semester); document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); });
+        document.getElementById('formSubject').addEventListener('submit', e => { e.preventDefault(); const id = document.getElementById('inputSubjectId').value; const data = { name: document.getElementById('inputSubjectName').value, code: document.getElementById('inputSubjectCode').value, credits: document.getElementById('inputSubjectCredits').value }; if(id) store.updateSubject(store.activeStudentId, id, data); else store.addSubject(store.activeStudentId, data); document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); });
+        document.getElementById('formEvaluation').addEventListener('submit', e => { e.preventDefault(); const sId = document.getElementById('inputEvalSubjectId').value; const eId = document.getElementById('inputEvalId').value; const data = { name: document.getElementById('inputEvalName').value, type: document.getElementById('inputEvalType').value, weight: document.getElementById('inputEvalWeight').value, grade: document.getElementById('inputEvalGrade').value }; if(eId) store.updateEvaluation(store.activeStudentId, sId, eId, data); else store.addEvaluation(store.activeStudentId, sId, data); document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); });
       }
 
       store.subscribe(renderAll);
