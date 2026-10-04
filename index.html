@@ -32,6 +32,12 @@
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    /* SALVAVIDAS PARA REDES RESTRINGIDAS (Evita que los iconos se vuelvan gigantes en la oficina) */
+    svg { max-width: 24px; max-height: 24px; flex-shrink: 0; display: inline-block; }
+    .w-12 { max-width: 48px; max-height: 48px; }
+    .w-10 { max-width: 40px; max-height: 40px; }
+    .w-6 { max-width: 24px; max-height: 24px; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -139,7 +145,6 @@
           </div>
           <div class="flex gap-2">
             <button id="btnEditCurrentStudent" class="px-4 py-2 text-xs font-bold text-white bg-slate-800 hover:bg-slate-900 rounded-lg shadow transition-colors">Editar Perfil</button>
-            <!-- Eliminado el botón de Eliminar Estudiante para proteger la información -->
           </div>
         </div>
       </div>
@@ -377,7 +382,7 @@
     </div>
   </div>
 
-  <!-- LÓGICA DE LA APLICACIÓN -->
+  <!-- LÓGICA DE LA APLICACIÓN (Con Guardado Híbrido Infalible) -->
   <script>
     (function () {
       'use strict';
