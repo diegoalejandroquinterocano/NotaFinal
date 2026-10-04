@@ -5,56 +5,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ITM Académico | Dashboard Principal</title>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            itm: { navy: '#002F6C', dark: '#001F47', gold: '#F9A01B', cyan: '#0094D8', red: '#E63946', green: '#2A9D8F' }
-          }
-        }
-      }
-    }
-  </script>
-
+  <!-- LA SOLUCIÓN: CSS Estático de Cloudflare (No bloqueado por empresas) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Estilos Visuales -->
+  <!-- Estilos Visuales y Salvavidas -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
-    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; }
-    .card { background: white; border: 1px solid #E2E8F0; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .card-header { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748B; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #f1f5f9; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     
-    /* SALVAVIDAS PARA REDES RESTRINGIDAS (Evita que los iconos se vuelvan gigantes en la oficina) */
+    :root {
+      --itm-navy: #002F6C;
+      --itm-dark: #001F47;
+      --itm-gold: #F9A01B;
+      --itm-cyan: #0094D8;
+      --itm-red: #E63946;
+      --itm-green: #2A9D8F;
+    }
+    
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+    
+    /* Clases personalizadas de color ITM */
+    .bg-itm-navy { background-color: var(--itm-navy); }
+    .bg-itm-dark { background-color: var(--itm-dark); }
+    .hover\:bg-itm-dark:hover { background-color: var(--itm-dark); }
+    .bg-itm-gold { background-color: var(--itm-gold); }
+    .bg-itm-cyan { background-color: var(--itm-cyan); }
+    .text-itm-navy { color: var(--itm-navy); }
+    .text-itm-gold { color: var(--itm-gold); }
+    .hover\:text-itm-gold:hover { color: var(--itm-gold); }
+    .text-itm-red { color: var(--itm-red); }
+    .text-itm-green { color: var(--itm-green); }
+    .border-itm-navy { border-color: var(--itm-navy); }
+    .border-itm-gold { border-color: var(--itm-gold); }
+    .border-t-itm-navy { border-top-color: var(--itm-navy); }
+    .border-t-itm-gold { border-top-color: var(--itm-gold); }
+    .border-t-itm-red { border-top-color: var(--itm-red); }
+    .border-t-itm-green { border-top-color: var(--itm-green); }
+
+    .card { background: white; border: 1px solid #E2E8F0; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card-header { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #6B7280; }
+    
+    /* Salvavidas: Fuerza los iconos a ser pequeños aunque falle el internet */
     svg { max-width: 24px; max-height: 24px; flex-shrink: 0; display: inline-block; }
-    .w-12 { max-width: 48px; max-height: 48px; }
-    .w-10 { max-width: 40px; max-height: 40px; }
-    .w-6 { max-width: 24px; max-height: 24px; }
+    
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f3f4f6; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
   <!-- BARRA DE NAVEGACIÓN -->
   <header class="bg-itm-navy text-white sticky top-0 z-40 shadow-md">
-    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto w-full px-4 sm:px-6 lg:px-8" style="max-width: 1600px;">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center space-x-3">
           <div class="w-10 h-10 rounded-lg bg-itm-gold flex items-center justify-center font-extrabold text-itm-navy text-xl shadow-inner">ITM</div>
           <div>
-            <h1 class="text-lg font-bold flex items-center gap-2">Gestión Académica <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-medium border border-white/30">3.0 Target</span></h1>
+            <h1 class="text-lg font-bold flex items-center gap-2">Gestión Académica <span class="text-xs bg-white bg-opacity-20 px-2 py-0.5 rounded-full font-medium border border-white border-opacity-30">3.0 Target</span></h1>
             <p class="text-xs text-blue-200">Instituto Tecnológico Metropolitano</p>
           </div>
         </div>
         <div>
-          <button id="btnCompareStudents" class="flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-colors">
+          <button id="btnCompareStudents" class="flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-white bg-opacity-10 hover:bg-opacity-20 border border-white border-opacity-20 transition-colors">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
             Comparar
           </button>
@@ -64,7 +80,7 @@
   </header>
 
   <!-- CONTENEDOR PRINCIPAL 3 COLUMNAS -->
-  <div class="max-w-[1600px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow">
+  <div class="mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow" style="max-width: 1600px;">
     
     <!-- COLUMNA IZQUIERDA: Informativa -->
     <aside class="hidden lg:flex flex-col space-y-6 col-span-1">
@@ -72,48 +88,48 @@
       <!-- Motivación -->
       <div class="card p-5 bg-gradient-to-br from-blue-50 to-white">
         <h3 class="card-header flex items-center gap-2 mb-3 text-itm-navy"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Motivación Diaria</h3>
-        <p class="text-sm font-medium text-slate-700 italic">"El éxito en la ingeniería no se basa en no fallar nunca, sino en compilar y corregir los errores todos los días."</p>
+        <p class="text-sm font-medium text-gray-700 italic">"El éxito en la ingeniería no se basa en no fallar nunca, sino en compilar y corregir los errores todos los días."</p>
       </div>
 
       <!-- Accesos Oficiales ITM -->
       <div class="card p-5">
         <h3 class="card-header mb-4">Accesos Rápidos ITM</h3>
         <ul class="space-y-3">
-          <li><a href="https://www.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-slate-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-navy mr-2"></span> Portal Principal ITM</a></li>
-          <li><a href="https://campus.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-slate-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-cyan mr-2"></span> Campus Virtual</a></li>
-          <li><a href="https://siaweb.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-slate-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-gold mr-2"></span> Sistema Académico (SIA)</a></li>
-          <li><a href="https://biblioteca.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-slate-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-slate-400 mr-2"></span> Biblioteca y Bases de Datos</a></li>
+          <li><a href="https://www.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-gray-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-navy mr-2"></span> Portal Principal ITM</a></li>
+          <li><a href="https://campus.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-gray-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-cyan mr-2"></span> Campus Virtual</a></li>
+          <li><a href="https://siaweb.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-gray-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-gold mr-2"></span> Sistema Académico (SIA)</a></li>
+          <li><a href="https://biblioteca.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-gray-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-gray-400 mr-2"></span> Biblioteca y Bases de Datos</a></li>
         </ul>
       </div>
 
       <!-- Instituciones Aliadas -->
-      <div class="card p-5 border-t-4 border-t-emerald-500">
+      <div class="card p-5 border-t-4 border-green-500">
         <h3 class="card-header mb-4 flex items-center gap-2">Instituciones Aliadas en Medellín</h3>
         <ul class="space-y-4">
           <li>
             <a href="https://lolagonzalez.edu.co/" target="_blank" class="block group">
-              <span class="flex items-center text-sm font-bold text-slate-800 group-hover:text-emerald-600 transition"><span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span> I.E. Lola González</span>
-              <p class="text-[10px] text-slate-500 ml-4 mt-0.5">Institución educativa de calidad y formación humana.</p>
+              <span class="flex items-center text-sm font-bold text-gray-800 hover:text-green-600 transition"><span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span> I.E. Lola González</span>
+              <p class="text-xs text-gray-500 ml-4 mt-0.5">Institución educativa de calidad y formación humana.</p>
             </a>
           </li>
           <li>
             <a href="https://iesamuelbarrientosrestrepo.edu.co/" target="_blank" class="block group">
-              <span class="flex items-center text-sm font-bold text-slate-800 group-hover:text-emerald-600 transition"><span class="w-2 h-2 rounded-full bg-teal-400 mr-2"></span> I.E. Samuel Barrientos</span>
-              <p class="text-[10px] text-slate-500 ml-4 mt-0.5">Educando con amor, ciencia y virtud.</p>
+              <span class="flex items-center text-sm font-bold text-gray-800 hover:text-green-600 transition"><span class="w-2 h-2 rounded-full bg-green-400 mr-2"></span> I.E. Samuel Barrientos</span>
+              <p class="text-xs text-gray-500 ml-4 mt-0.5">Educando con amor, ciencia y virtud.</p>
             </a>
           </li>
         </ul>
       </div>
 
       <!-- Widget Clima Medellín -->
-      <div class="card p-0 overflow-hidden bg-gradient-to-t from-sky-100 to-sky-50 border-sky-200">
+      <div class="card p-0 overflow-hidden bg-gradient-to-t from-blue-100 to-blue-50 border-blue-200">
         <div class="p-5">
-          <h3 class="card-header mb-2 text-sky-800">Medellín, CO</h3>
+          <h3 class="card-header mb-2 text-blue-800">Medellín, CO</h3>
           <div class="flex items-center justify-between">
-            <div class="text-4xl font-light text-slate-800 tracking-tighter">24<span class="text-2xl">°C</span></div>
-            <div class="text-sky-500"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg></div>
+            <div class="text-4xl font-light text-gray-800 tracking-tighter">24<span class="text-2xl">°C</span></div>
+            <div class="text-blue-500"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg></div>
           </div>
-          <p class="text-xs text-slate-500 font-medium mt-1">Parcialmente nublado • Probabilidad de lluvia: 15%</p>
+          <p class="text-xs text-gray-500 font-medium mt-1">Parcialmente nublado • Probabilidad de lluvia: 15%</p>
         </div>
       </div>
     </aside>
@@ -125,8 +141,8 @@
       <div class="card p-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
           <div>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-itm-navy">Modo Multi-Estudiante <span class="text-slate-500 normal-case ml-1" id="studentCounterText">(3/5)</span></h3>
-            <p class="text-xs text-slate-500">Conmuta entre perfiles para gestionar notas</p>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-itm-navy">Modo Multi-Estudiante <span class="text-gray-500 normal-case ml-1" id="studentCounterText">(3/5)</span></h3>
+            <p class="text-xs text-gray-500">Conmuta entre perfiles para gestionar notas</p>
           </div>
           <button id="btnOpenAddStudent" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow transition-colors">+ Nuevo Estudiante</button>
         </div>
@@ -137,47 +153,47 @@
       <div class="card p-5 border-l-4 border-itm-gold" id="studentHeaderCard">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="flex items-center space-x-4">
-            <div id="studentAvatar" class="w-12 h-12 rounded-xl bg-itm-navy flex items-center justify-center text-white text-lg font-bold shadow-md">DI</div>
+            <div id="studentAvatar" class="w-12 h-12 rounded-xl bg-itm-navy flex items-center justify-center text-white text-lg font-bold shadow-md">ITM</div>
             <div>
-              <h2 id="studentNameText" class="text-lg font-extrabold text-slate-900 tracking-tight">Cargando...</h2>
-              <p id="studentProgramText" class="text-xs text-slate-600 font-medium mt-0.5">Cargando...</p>
+              <h2 id="studentNameText" class="text-lg font-extrabold text-gray-900 tracking-tight">Cargando...</h2>
+              <p id="studentProgramText" class="text-xs text-gray-600 font-medium mt-0.5">Cargando...</p>
             </div>
           </div>
           <div class="flex gap-2">
-            <button id="btnEditCurrentStudent" class="px-4 py-2 text-xs font-bold text-white bg-slate-800 hover:bg-slate-900 rounded-lg shadow transition-colors">Editar Perfil</button>
+            <button id="btnEditCurrentStudent" class="px-4 py-2 text-xs font-bold text-white bg-gray-800 hover:bg-gray-900 rounded-lg shadow transition-colors">Editar Perfil</button>
           </div>
         </div>
       </div>
 
       <!-- Métricas (2x2) -->
       <div class="grid grid-cols-2 gap-4">
-        <div class="card p-4 border-t-[3px] border-t-itm-navy">
+        <div class="card p-4 border-t-4 border-t-itm-navy">
           <span class="card-header">Promedio Semestre</span>
           <div class="flex items-baseline space-x-1 mt-2">
-            <span id="metricSemesterAvg" class="text-2xl font-extrabold text-slate-900 font-mono">0.00</span><span class="text-xs font-semibold text-slate-500">/ 5.0</span>
+            <span id="metricSemesterAvg" class="text-2xl font-extrabold text-gray-900 font-mono">0.00</span><span class="text-xs font-semibold text-gray-500">/ 5.0</span>
           </div>
-          <p class="mt-1 text-[10px] text-slate-500">Calculado con créditos</p>
+          <p class="mt-1 text-xs text-gray-500">Calculado con créditos</p>
         </div>
-        <div class="card p-4 border-t-[3px] border-t-[#2A9D8F]">
+        <div class="card p-4 border-t-4 border-t-itm-green">
           <span class="card-header">Aprobadas (&ge; 3.0)</span>
           <div class="flex items-baseline space-x-1 mt-2">
-            <span id="metricPassedCount" class="text-2xl font-extrabold text-[#2A9D8F] font-mono">0</span><span id="metricTotalSubjectsText" class="text-xs font-semibold text-slate-500">de 0</span>
+            <span id="metricPassedCount" class="text-2xl font-extrabold text-itm-green font-mono">0</span><span id="metricTotalSubjectsText" class="text-xs font-semibold text-gray-500">de 0</span>
           </div>
-          <p class="mt-1 text-[10px] text-[#2A9D8F] font-semibold">Nota mínima ITM: 3.0</p>
+          <p class="mt-1 text-xs text-itm-green font-semibold">Nota mínima ITM: 3.0</p>
         </div>
-        <div class="card p-4 border-t-[3px] border-t-[#E63946]">
+        <div class="card p-4 border-t-4 border-t-itm-red">
           <span class="card-header">En Riesgo Crítico</span>
           <div class="flex items-baseline space-x-1 mt-2">
-            <span id="metricRiskCount" class="text-2xl font-extrabold text-[#E63946] font-mono">0</span><span class="text-xs font-semibold text-slate-500">req &gt; 5.0</span>
+            <span id="metricRiskCount" class="text-2xl font-extrabold text-itm-red font-mono">0</span><span class="text-xs font-semibold text-gray-500">req &gt; 5.0</span>
           </div>
-          <p class="mt-1 text-[10px] text-[#E63946] font-semibold">Atención prioritaria</p>
+          <p class="mt-1 text-xs text-itm-red font-semibold">Atención prioritaria</p>
         </div>
-        <div class="card p-4 border-t-[3px] border-t-itm-gold">
+        <div class="card p-4 border-t-4 border-t-itm-gold">
           <span class="card-header">Créditos Inscritos</span>
           <div class="flex items-baseline space-x-1 mt-2">
-            <span id="metricCreditsCount" class="text-2xl font-extrabold text-slate-900 font-mono">0</span><span class="text-xs font-semibold text-slate-500">créditos</span>
+            <span id="metricCreditsCount" class="text-2xl font-extrabold text-gray-900 font-mono">0</span><span class="text-xs font-semibold text-gray-500">créditos</span>
           </div>
-          <p class="mt-1 text-[10px] text-amber-600 font-semibold">Carga académica activa</p>
+          <p class="mt-1 text-xs text-yellow-600 font-semibold">Carga académica activa</p>
         </div>
       </div>
 
@@ -196,7 +212,7 @@
       <!-- Listado de Materias -->
       <div class="pt-2">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">Materias del Semestre <span id="subjectCountBadge" class="text-xs px-2 py-0.5 rounded-full font-bold bg-itm-navy text-white">0/10</span></h3>
+          <h3 class="text-lg font-extrabold text-gray-900 flex items-center gap-2">Materias del Semestre <span id="subjectCountBadge" class="text-xs px-2 py-0.5 rounded-full font-bold bg-itm-navy text-white">0/10</span></h3>
           <button id="btnOpenAddSubject" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow">+ Matricular Nueva Materia</button>
         </div>
         <div id="subjectsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
@@ -211,15 +227,15 @@
         <h3 class="card-header mb-4">Redes Sociales y Contacto</h3>
         <div class="flex justify-around gap-2">
           <!-- WhatsApp -->
-          <a href="#" class="p-2 bg-slate-50 border border-slate-200 rounded-lg hover:bg-green-50 hover:text-green-600 transition" title="WhatsApp">
+          <a href="#" class="p-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-green-50 hover:text-green-600 transition" title="WhatsApp">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           </a>
           <!-- Instagram -->
-          <a href="#" class="p-2 bg-slate-50 border border-slate-200 rounded-lg hover:bg-pink-50 hover:text-pink-600 transition" title="Instagram">
+          <a href="#" class="p-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-pink-50 hover:text-pink-600 transition" title="Instagram">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
           </a>
           <!-- LinkedIn -->
-          <a href="#" class="p-2 bg-slate-50 border border-slate-200 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition" title="LinkedIn">
+          <a href="#" class="p-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition" title="LinkedIn">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
           </a>
         </div>
@@ -229,20 +245,20 @@
       <div class="card p-5">
         <h3 class="card-header mb-4 flex items-center gap-2"><svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg> Asistentes IA</h3>
         <ul class="space-y-3">
-          <li><a href="https://chat.openai.com/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-200 transition group"><span class="text-sm font-semibold text-slate-700">ChatGPT</span> <svg class="w-4 h-4 text-slate-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
-          <li><a href="https://gemini.google.com/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-200 transition group"><span class="text-sm font-semibold text-slate-700">Google Gemini</span> <svg class="w-4 h-4 text-slate-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
-          <li><a href="https://www.perplexity.ai/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-200 transition group"><span class="text-sm font-semibold text-slate-700">Perplexity (Buscador)</span> <svg class="w-4 h-4 text-slate-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
+          <li><a href="https://chat.openai.com/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-200 transition group"><span class="text-sm font-semibold text-gray-700">ChatGPT</span> <svg class="w-4 h-4 text-gray-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
+          <li><a href="https://gemini.google.com/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-200 transition group"><span class="text-sm font-semibold text-gray-700">Google Gemini</span> <svg class="w-4 h-4 text-gray-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
+          <li><a href="https://www.perplexity.ai/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-200 transition group"><span class="text-sm font-semibold text-gray-700">Perplexity (Buscador)</span> <svg class="w-4 h-4 text-gray-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
         </ul>
       </div>
 
       <!-- Google Apps Integradas -->
-      <div class="card p-5 border-t-4 border-t-blue-500">
+      <div class="card p-5 border-t-4 border-blue-500">
         <h3 class="card-header mb-4 flex items-center gap-2">Ecosistema Google</h3>
         <div class="grid grid-cols-2 gap-2">
-          <a href="https://drive.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Drive"><span class="text-[10px] font-bold text-slate-600">Drive</span></a>
-          <a href="https://docs.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Google_Docs_logo_%282014-2020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Docs"><span class="text-[10px] font-bold text-slate-600">Docs</span></a>
-          <a href="https://calendar.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Calendar"><span class="text-[10px] font-bold text-slate-600">Calendar</span></a>
-          <a href="https://scholar.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Google_Scholar_logo.svg" class="w-6 h-6 mx-auto mb-1" alt="Scholar"><span class="text-[10px] font-bold text-slate-600">Scholar</span></a>
+          <a href="https://drive.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Drive"><span class="text-xs font-bold text-gray-600">Drive</span></a>
+          <a href="https://docs.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Google_Docs_logo_%282014-2020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Docs"><span class="text-xs font-bold text-gray-600">Docs</span></a>
+          <a href="https://calendar.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Calendar"><span class="text-xs font-bold text-gray-600">Calendar</span></a>
+          <a href="https://scholar.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Google_Scholar_logo.svg" class="w-6 h-6 mx-auto mb-1" alt="Scholar"><span class="text-xs font-bold text-gray-600">Scholar</span></a>
         </div>
       </div>
 
@@ -250,13 +266,13 @@
       <div class="card p-5">
         <h3 class="card-header mb-4">Noticias de Tecnología</h3>
         <div class="space-y-3">
-          <a href="https://es.wired.com/" target="_blank" class="block hover:bg-slate-50 p-2 rounded-lg transition border border-transparent hover:border-slate-200">
-            <h4 class="text-xs font-bold text-slate-800">Tendencias en Ingeniería</h4>
-            <p class="text-[10px] text-slate-500 mt-1">Descubre los avances en inteligencia artificial y desarrollo de software para el 2026.</p>
+          <a href="https://es.wired.com/" target="_blank" class="block hover:bg-gray-50 p-2 rounded-lg transition border border-transparent hover:border-gray-200">
+            <h4 class="text-xs font-bold text-gray-800">Tendencias en Ingeniería</h4>
+            <p class="text-xs text-gray-500 mt-1">Descubre los avances en inteligencia artificial y desarrollo de software para el 2026.</p>
           </a>
-          <a href="https://www.xataka.com/" target="_blank" class="block hover:bg-slate-50 p-2 rounded-lg transition border border-transparent hover:border-slate-200">
-            <h4 class="text-xs font-bold text-slate-800">Xataka: Innovación</h4>
-            <p class="text-[10px] text-slate-500 mt-1">Las últimas noticias sobre hardware, computación y el mundo digital actualizadas hoy.</p>
+          <a href="https://www.xataka.com/" target="_blank" class="block hover:bg-gray-50 p-2 rounded-lg transition border border-transparent hover:border-gray-200">
+            <h4 class="text-xs font-bold text-gray-800">Xataka: Innovación</h4>
+            <p class="text-xs text-gray-500 mt-1">Las últimas noticias sobre hardware, computación y el mundo digital actualizadas hoy.</p>
           </a>
         </div>
       </div>
@@ -265,30 +281,30 @@
   </div>
 
   <!-- MODAL: MATERIA -->
-  <div id="modalSubject" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="card max-w-md w-full p-6 space-y-4">
+  <div id="modalSubject" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card w-full p-6 space-y-4" style="max-width: 28rem;">
       <div class="flex items-center justify-between border-b pb-3">
         <h4 id="modalSubjectTitle" class="text-lg font-bold text-itm-navy">Matricular Materia ITM</h4>
-        <button id="btnCloseSubjectModal" class="text-slate-400 hover:text-slate-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <button id="btnCloseSubjectModal" class="text-gray-400 hover:text-gray-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <form id="formSubject" class="space-y-4">
         <input type="hidden" id="inputSubjectId">
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nombre de la Materia *</label>
-          <input type="text" id="inputSubjectName" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nombre de la Materia *</label>
+          <input type="text" id="inputSubjectName" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Código (Opcional)</label>
-            <input type="text" id="inputSubjectCode" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-itm-navy focus:outline-none">
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Código (Opcional)</label>
+            <input type="text" id="inputSubjectCode" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-itm-navy focus:outline-none">
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Créditos ITM *</label>
-            <input type="number" id="inputSubjectCredits" min="1" max="10" value="3" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Créditos ITM *</label>
+            <input type="number" id="inputSubjectCredits" min="1" max="10" value="3" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
           </div>
         </div>
         <div class="flex items-center justify-end space-x-2 pt-3 border-t mt-4">
-          <button type="button" id="btnCancelSubject" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
+          <button type="button" id="btnCancelSubject" class="px-4 py-2 text-xs font-semibold rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700">Cancelar</button>
           <button type="submit" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white">Guardar Materia</button>
         </div>
       </form>
@@ -296,37 +312,37 @@
   </div>
 
   <!-- MODAL: EVALUACIÓN -->
-  <div id="modalEvaluation" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="card max-w-md w-full p-6 space-y-4">
+  <div id="modalEvaluation" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card w-full p-6 space-y-4" style="max-width: 28rem;">
       <div class="flex items-center justify-between border-b pb-3">
         <h4 id="modalEvalTitle" class="text-lg font-bold text-itm-navy">Registrar / Editar Nota</h4>
-        <button id="btnCloseEvalModal" class="text-slate-400 hover:text-slate-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <button id="btnCloseEvalModal" class="text-gray-400 hover:text-gray-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <form id="formEvaluation" class="space-y-4">
         <input type="hidden" id="inputEvalSubjectId">
         <input type="hidden" id="inputEvalId">
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nombre / Descripción *</label>
-          <input type="text" id="inputEvalName" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nombre / Descripción *</label>
+          <input type="text" id="inputEvalName" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Tipo</label>
-            <select id="inputEvalType" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none bg-white">
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tipo</label>
+            <select id="inputEvalType" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none bg-white">
               <option value="Parcial">Parcial</option><option value="Quiz">Quiz</option><option value="Taller">Taller / Lab</option><option value="Proyecto">Proyecto</option><option value="Seguimiento">Seguimiento</option>
             </select>
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Peso (%) *</label>
-            <input type="number" id="inputEvalWeight" min="1" max="100" step="0.5" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Peso (%) *</label>
+            <input type="number" id="inputEvalWeight" min="1" max="100" step="0.5" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
           </div>
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nota Obtenida (0.0 - 5.0) *</label>
-          <input type="number" id="inputEvalGrade" min="0.0" max="5.0" step="0.01" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nota Obtenida (0.0 - 5.0) *</label>
+          <input type="number" id="inputEvalGrade" min="0.0" max="5.0" step="0.01" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
         <div class="flex items-center justify-end space-x-2 pt-3 border-t mt-4">
-          <button type="button" id="btnCancelEval" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
+          <button type="button" id="btnCancelEval" class="px-4 py-2 text-xs font-semibold rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700">Cancelar</button>
           <button type="submit" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white">Guardar Nota</button>
         </div>
       </form>
@@ -334,28 +350,28 @@
   </div>
 
   <!-- MODAL: ESTUDIANTE -->
-  <div id="modalStudent" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="card max-w-md w-full p-6 space-y-4">
+  <div id="modalStudent" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card w-full p-6 space-y-4" style="max-width: 28rem;">
       <div class="flex items-center justify-between border-b pb-3">
         <h4 id="modalStudentTitle" class="text-lg font-bold text-itm-navy">Perfil de Estudiante</h4>
-        <button id="btnCloseStudentModal" class="text-slate-400 hover:text-slate-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <button id="btnCloseStudentModal" class="text-gray-400 hover:text-gray-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <form id="formStudent" class="space-y-4">
         <input type="hidden" id="inputStudentId">
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
-          <input type="text" id="inputStudentName" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nombre Completo *</label>
+          <input type="text" id="inputStudentName" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Programa Académico *</label>
-          <input type="text" id="inputStudentProgram" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Programa Académico *</label>
+          <input type="text" id="inputStudentProgram" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Semestre / Periodo</label>
-          <input type="text" id="inputStudentSemester" value="Semestre 2026-1" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Semestre / Periodo</label>
+          <input type="text" id="inputStudentSemester" value="Semestre 2026-1" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-itm-navy focus:outline-none">
         </div>
         <div class="flex items-center justify-end space-x-2 pt-3 border-t mt-4">
-          <button type="button" id="btnCancelStudent" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Cancelar</button>
+          <button type="button" id="btnCancelStudent" class="px-4 py-2 text-xs font-semibold rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700">Cancelar</button>
           <button type="submit" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white">Guardar Estudiante</button>
         </div>
       </form>
@@ -363,26 +379,26 @@
   </div>
 
   <!-- MODAL: COMPARADOR -->
-  <div id="modalCompare" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="card max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto">
+  <div id="modalCompare" class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card w-full p-6 max-h-[90vh] overflow-y-auto" style="max-width: 48rem;">
       <div class="flex items-center justify-between border-b pb-3 mb-4">
         <h4 class="text-lg font-bold text-itm-navy">Comparador de Estudiantes ITM</h4>
-        <button id="btnCloseCompareModal" class="text-slate-400 hover:text-slate-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <button id="btnCloseCompareModal" class="text-gray-400 hover:text-gray-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm whitespace-nowrap">
           <thead>
-            <tr class="bg-slate-50 text-slate-500 border-b text-xs uppercase tracking-wider">
+            <tr class="bg-gray-50 text-gray-500 border-b text-xs uppercase tracking-wider">
               <th class="p-3 font-semibold">Estudiante</th><th class="p-3 font-semibold text-center">Materias</th><th class="p-3 font-semibold text-center">Créditos</th><th class="p-3 font-semibold text-center">Promedio</th><th class="p-3 font-semibold text-center">Aprobadas</th><th class="p-3 font-semibold text-center">Acción</th>
             </tr>
           </thead>
-          <tbody id="compareTableBody" class="divide-y divide-slate-100"></tbody>
+          <tbody id="compareTableBody" class="divide-y divide-gray-100"></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- LÓGICA DE LA APLICACIÓN (Con Guardado Híbrido Infalible) -->
+  <!-- LÓGICA DE LA APLICACIÓN -->
   <script>
     (function () {
       'use strict';
@@ -555,7 +571,7 @@
 
         document.getElementById('studentCounterText').textContent = `(${students.length}/${MAX_STUDENTS})`;
         document.getElementById('studentsTabsContainer').innerHTML = students.map(s => `
-          <button data-student-id="${s.id}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors border ${s.id === student.id ? 'bg-itm-navy text-white border-itm-navy' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}">
+          <button data-student-id="${s.id}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors border flex-shrink-0 ${s.id === student.id ? 'bg-itm-navy text-white border-itm-navy' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'}">
             ${escapeHtml(s.name.toUpperCase())}
           </button>`).join('');
 
@@ -574,7 +590,7 @@
         const container = document.getElementById('subjectsContainer');
         
         if (subjects.length === 0) {
-          container.innerHTML = `<div class="col-span-full card p-10 text-center"><p class="text-slate-500 mb-4">No hay materias registradas para este periodo.</p><button id="btnEmptyAddSubject" class="bg-itm-navy text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow">+ Matricular Primera Materia</button></div>`;
+          container.innerHTML = `<div class="col-span-full card p-10 text-center"><p class="text-gray-500 mb-4">No hay materias registradas para este periodo.</p><button id="btnEmptyAddSubject" class="bg-itm-navy text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow">+ Matricular Primera Materia</button></div>`;
         } else {
           container.innerHTML = subjects.map(sub => {
             const calc = calculateSubjectStatus(sub.evaluations);
@@ -582,29 +598,29 @@
               <div class="card p-0 flex flex-col justify-between overflow-hidden">
                 <div class="p-4">
                   <div class="flex justify-between items-start mb-4">
-                    <div><h4 class="font-extrabold text-[13px] text-slate-900 uppercase">${escapeHtml(sub.name)}</h4><p class="text-xs text-slate-500 mt-1">${sub.credits} créditos</p></div>
+                    <div><h4 class="font-extrabold text-sm text-gray-900 uppercase">${escapeHtml(sub.name)}</h4><p class="text-xs text-gray-500 mt-1">${sub.credits} créditos</p></div>
                     <div class="flex gap-1 ml-2">
-                      <button data-action="edit-subject" data-subject-id="${sub.id}" class="text-slate-400 hover:text-itm-gold"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button>
-                      <button data-action="delete-subject" data-subject-id="${sub.id}" class="text-slate-400 hover:text-rose-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
+                      <button data-action="edit-subject" data-subject-id="${sub.id}" class="text-gray-400 hover:text-itm-gold"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button>
+                      <button data-action="delete-subject" data-subject-id="${sub.id}" class="text-gray-400 hover:text-red-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
                     </div>
                   </div>
-                  <div class="bg-slate-50 rounded-lg p-3 flex justify-between items-center mb-4 border border-slate-100">
-                    <div><span class="text-[9px] uppercase font-bold text-slate-500 block mb-0.5">Acumulado</span><span class="font-mono text-lg font-black text-slate-900">${calc.accumulatedGrade.toFixed(2)}</span></div>
-                    <div class="text-right"><span class="text-[9px] uppercase font-bold text-slate-500 block mb-0.5">Falta para 3.0</span><span class="font-mono text-lg font-black ${calc.status==='passed'?'text-[#2A9D8F]':calc.status==='critical'?'text-[#E63946]':'text-slate-900'}">${calc.status==='passed'?'0.00':calc.requiredGrade.toFixed(2)}</span></div>
+                  <div class="bg-gray-50 rounded-lg p-3 flex justify-between items-center mb-4 border border-gray-100">
+                    <div><span class="text-xs uppercase font-bold text-gray-500 block mb-0.5">Acumulado</span><span class="font-mono text-lg font-black text-gray-900">${calc.accumulatedGrade.toFixed(2)}</span></div>
+                    <div class="text-right"><span class="text-xs uppercase font-bold text-gray-500 block mb-0.5">Falta para 3.0</span><span class="font-mono text-lg font-black ${calc.status==='passed'?'text-itm-green':calc.status==='critical'?'text-itm-red':'text-gray-900'}">${calc.status==='passed'?'0.00':calc.requiredGrade.toFixed(2)}</span></div>
                   </div>
                   <div class="space-y-1.5">
                     ${sub.evaluations.map(ev => `
-                      <div class="flex justify-between items-center text-[11px] group p-1.5 hover:bg-slate-50 rounded-lg transition-colors border border-transparent hover:border-slate-100">
-                        <span class="font-medium text-slate-600 truncate mr-2">${escapeHtml(ev.name)} <span class="text-slate-400">(${ev.weight}%)</span></span>
-                        <div class="flex items-center shrink-0">
-                          <span class="font-mono font-bold text-slate-800">${ev.grade.toFixed(2)}</span>
-                          <button data-action="edit-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-slate-300 hover:text-itm-gold ml-2 opacity-0 group-hover:opacity-100 transition-opacity" title="Editar Nota"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button>
-                          <button data-action="delete-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-slate-300 hover:text-rose-500 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Eliminar Nota"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
+                      <div class="flex justify-between items-center text-xs group p-1.5 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100">
+                        <span class="font-medium text-gray-600 truncate mr-2">${escapeHtml(ev.name)} <span class="text-gray-400">(${ev.weight}%)</span></span>
+                        <div class="flex items-center flex-shrink-0">
+                          <span class="font-mono font-bold text-gray-800">${ev.grade.toFixed(2)}</span>
+                          <button data-action="edit-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-gray-300 hover:text-itm-gold ml-2 opacity-0 group-hover:opacity-100 transition-opacity" title="Editar Nota"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button>
+                          <button data-action="delete-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-gray-300 hover:text-red-500 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" title="Eliminar Nota"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
                         </div>
                       </div>`).join('')}
                   </div>
                 </div>
-                <button data-action="add-eval" data-subject-id="${sub.id}" class="w-full bg-slate-50 hover:bg-slate-100 text-[#002F6C] text-xs font-bold py-3 border-t border-slate-100 transition-colors">+ Registrar Evaluación</button>
+                <button data-action="add-eval" data-subject-id="${sub.id}" class="w-full bg-gray-50 hover:bg-gray-100 text-itm-navy text-xs font-bold py-3 border-t border-gray-100 transition-colors">+ Registrar Evaluación</button>
               </div>`;
           }).join('');
         }
@@ -621,7 +637,7 @@
             document.getElementById('inputStudentId').value = s.id; document.getElementById('inputStudentName').value = s.name; document.getElementById('inputStudentProgram').value = s.program; document.getElementById('inputStudentSemester').value = s.semester; document.getElementById('modalStudent').classList.remove('hidden'); 
           }
           if (e.target.closest('#btnCompareStudents')) { 
-             document.getElementById('compareTableBody').innerHTML = store.getAllStudents().map(st => { const m = calculateSemesterMetrics(st.subjects); const pass = m.semesterAverage >= 3.0; return `<tr class="hover:bg-slate-50"><td class="p-3 font-semibold text-slate-800">${st.name}</td><td class="p-3 text-center text-slate-600">${m.totalSubjects}</td><td class="p-3 text-center text-slate-600">${m.totalCredits}</td><td class="p-3 text-center"><span class="font-mono font-bold px-2 py-0.5 rounded ${pass?'bg-emerald-100 text-emerald-800':'bg-rose-100 text-rose-800'}">${m.semesterAverage.toFixed(2)}</span></td><td class="p-3 text-center font-bold text-emerald-600">${m.passedSubjects}</td><td class="p-3 text-center"><button data-switch-to="${st.id}" class="bg-itm-navy hover:bg-itm-dark text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow">Ver Notas</button></td></tr>`; }).join('');
+             document.getElementById('compareTableBody').innerHTML = store.getAllStudents().map(st => { const m = calculateSemesterMetrics(st.subjects); const pass = m.semesterAverage >= 3.0; return `<tr class="hover:bg-gray-50"><td class="p-3 font-semibold text-gray-800">${st.name}</td><td class="p-3 text-center text-gray-600">${m.totalSubjects}</td><td class="p-3 text-center text-gray-600">${m.totalCredits}</td><td class="p-3 text-center"><span class="font-mono font-bold px-2 py-0.5 rounded ${pass?'bg-green-100 text-green-800':'bg-red-100 text-red-800'}">${m.semesterAverage.toFixed(2)}</span></td><td class="p-3 text-center font-bold text-green-600">${m.passedSubjects}</td><td class="p-3 text-center"><button data-switch-to="${st.id}" class="bg-itm-navy hover:bg-itm-dark text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow">Ver Notas</button></td></tr>`; }).join('');
              document.getElementById('modalCompare').classList.remove('hidden');
           }
           if (e.target.closest('[data-switch-to]')) { store.setActiveStudent(e.target.closest('[data-switch-to]').dataset.switchTo); document.getElementById('modalCompare').classList.add('hidden'); }
