@@ -11,7 +11,7 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Estilos Visuales -->
+  <!-- Estilos Visuales y Salvavidas -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
     
@@ -26,6 +26,7 @@
     
     body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #1E293B; }
     
+    /* Clases personalizadas ITM */
     .bg-itm-navy { background-color: var(--itm-navy); }
     .bg-itm-dark { background-color: var(--itm-dark); }
     .hover\:bg-itm-dark:hover { background-color: var(--itm-dark); }
@@ -36,11 +37,17 @@
     .hover\:text-itm-gold:hover { color: var(--itm-gold); }
     .text-itm-red { color: var(--itm-red); }
     .text-itm-green { color: var(--itm-green); }
-    
+    .border-itm-navy { border-color: var(--itm-navy); }
+    .border-itm-gold { border-color: var(--itm-gold); }
+    .border-t-itm-navy { border-top-color: var(--itm-navy); }
+    .border-t-itm-gold { border-top-color: var(--itm-gold); }
+    .border-t-itm-red { border-top-color: var(--itm-red); }
+    .border-t-itm-green { border-top-color: var(--itm-green); }
+
     .card { background: white; border: 1px solid #E2E8F0; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .card-header { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #6B7280; }
     
-    /* Salvavidas de iconos */
+    /* Salvavidas: Fuerza el tamaño de los iconos en oficinas restrictivas */
     svg { max-width: 24px; max-height: 24px; flex-shrink: 0; display: inline-block; }
     
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -68,7 +75,7 @@
             Comparar
           </button>
           
-          <!-- BOTÓN CANDADO (PIN 1983) -->
+          <!-- BOTÓN CANDADO (PIN DE SEGURIDAD 1983) -->
           <button id="btnAdminUnlock" class="flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-white bg-opacity-10 hover:bg-opacity-20 border border-white border-opacity-20 transition-colors">
             <svg id="iconLock" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
@@ -80,16 +87,18 @@
     </div>
   </header>
 
-  <!-- CONTENEDOR PRINCIPAL: ESTRICTO 25% - 50% - 25% EN PC -->
-  <div class="mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6 flex-grow" style="max-width: 1600px;">
+  <!-- CONTENEDOR PRINCIPAL 5 COLUMNAS: (20% - 60% - 20%) -->
+  <div class="mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-5 gap-6 flex-grow" style="max-width: 1600px;">
     
-    <!-- COLUMNA IZQUIERDA: Informativa (25%) -->
-    <aside class="w-full lg:w-1/4 flex-shrink-0 flex flex-col space-y-6">
+    <!-- COLUMNA IZQUIERDA (20%): Informativa -->
+    <aside class="hidden lg:flex flex-col space-y-6 col-span-1">
+      
       <!-- Motivación -->
       <div class="card p-5 bg-gradient-to-br from-blue-50 to-white">
         <h3 class="card-header flex items-center gap-2 mb-3 text-itm-navy"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Motivación Diaria</h3>
         <p class="text-sm font-medium text-gray-700 italic">"El éxito en la ingeniería no se basa en no fallar nunca, sino en compilar y corregir los errores todos los días."</p>
       </div>
+
       <!-- Accesos Oficiales ITM -->
       <div class="card p-5">
         <h3 class="card-header mb-4">Accesos Rápidos ITM</h3>
@@ -97,12 +106,13 @@
           <li><a href="https://www.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-gray-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-navy mr-2"></span> Portal Principal ITM</a></li>
           <li><a href="https://campus.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-gray-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-cyan mr-2"></span> Campus Virtual</a></li>
           <li><a href="https://siaweb.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-gray-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-itm-gold mr-2"></span> Sistema Académico (SIA)</a></li>
-          <li><a href="https://biblioteca.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-gray-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-gray-400 mr-2"></span> Biblioteca y Bases</a></li>
+          <li><a href="https://biblioteca.itm.edu.co/" target="_blank" class="flex items-center text-sm font-semibold text-gray-700 hover:text-itm-navy transition"><span class="w-2 h-2 rounded-full bg-gray-400 mr-2"></span> Biblioteca y Bases de Datos</a></li>
         </ul>
       </div>
+
       <!-- Instituciones Aliadas -->
       <div class="card p-5 border-t-4 border-green-500">
-        <h3 class="card-header mb-4 flex items-center gap-2">Instituciones en Medellín</h3>
+        <h3 class="card-header mb-4 flex items-center gap-2">Instituciones Aliadas en Medellín</h3>
         <ul class="space-y-4">
           <li>
             <a href="https://lolagonzalez.edu.co/" target="_blank" class="block group">
@@ -118,10 +128,22 @@
           </li>
         </ul>
       </div>
+
+      <!-- Widget Clima Medellín -->
+      <div class="card p-0 overflow-hidden bg-gradient-to-t from-blue-100 to-blue-50 border-blue-200">
+        <div class="p-5">
+          <h3 class="card-header mb-2 text-blue-800">Medellín, CO</h3>
+          <div class="flex items-center justify-between">
+            <div class="text-4xl font-light text-gray-800 tracking-tighter">24<span class="text-2xl">°C</span></div>
+            <div class="text-blue-500"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg></div>
+          </div>
+          <p class="text-xs text-gray-500 font-medium mt-1">Parcialmente nublado • Probabilidad de lluvia: 15%</p>
+        </div>
+      </div>
     </aside>
 
-    <!-- COLUMNA CENTRAL: Gestor de Notas (50%) -->
-    <main class="w-full lg:w-2/4 flex-grow space-y-5">
+    <!-- COLUMNA CENTRAL (60%): Gestor de Notas -->
+    <main class="col-span-1 lg:col-span-3 space-y-5">
       
       <!-- Multi-Estudiante -->
       <div class="card p-4">
@@ -130,54 +152,58 @@
             <h3 class="text-xs font-bold uppercase tracking-wider text-itm-navy">Modo Multi-Estudiante <span class="text-gray-500 normal-case ml-1" id="studentCounterText">(3/5)</span></h3>
             <p class="text-xs text-gray-500">Conmuta entre perfiles para gestionar notas</p>
           </div>
-          <!-- Botón oculto en Lectura -->
-          <button id="btnOpenAddStudent" style="display: none;" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow transition-colors">+ Nuevo Estudiante</button>
+          <!-- Botón siempre visible, valida internamente el PIN -->
+          <button id="btnOpenAddStudent" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow transition-colors">+ Nuevo Estudiante</button>
         </div>
-        <div class="flex items-center gap-2 overflow-x-auto pb-2" id="studentsTabsContainer"></div>
+        <div class="flex items-center gap-2 overflow-x-auto" id="studentsTabsContainer"></div>
       </div>
 
       <!-- Tarjeta Perfil -->
       <div class="card p-5 border-l-4 border-itm-gold" id="studentHeaderCard">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="flex items-center space-x-4">
-            <div id="studentAvatar" class="w-12 h-12 rounded-xl bg-itm-navy flex items-center justify-center text-white text-lg font-bold shadow-md">ITM</div>
+            <div id="studentAvatar" class="w-14 h-14 rounded-xl bg-itm-navy flex items-center justify-center text-white text-xl font-bold shadow-md">ITM</div>
             <div>
-              <h2 id="studentNameText" class="text-lg font-extrabold text-gray-900 tracking-tight">Cargando...</h2>
-              <p id="studentProgramText" class="text-xs text-gray-600 font-medium mt-0.5">Cargando...</p>
+              <h2 id="studentNameText" class="text-xl font-extrabold text-gray-900 tracking-tight">Cargando...</h2>
+              <p id="studentProgramText" class="text-sm text-gray-600 font-medium mt-0.5">Cargando...</p>
             </div>
           </div>
           <div class="flex gap-2">
-            <!-- Botón oculto en Lectura -->
-            <button id="btnEditCurrentStudent" style="display: none;" class="px-4 py-2 text-xs font-bold text-white bg-gray-800 hover:bg-gray-900 rounded-lg shadow transition-colors">Editar Perfil</button>
+            <!-- Botón siempre visible, valida internamente el PIN -->
+            <button id="btnEditCurrentStudent" class="px-4 py-2 text-xs font-bold text-white bg-gray-800 hover:bg-gray-900 rounded-lg shadow transition-colors">Editar Perfil</button>
           </div>
         </div>
       </div>
 
       <!-- Métricas (2x2) -->
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="card p-4 border-t-4 border-t-itm-navy">
           <span class="card-header">Promedio Semestre</span>
           <div class="flex items-baseline space-x-1 mt-2">
             <span id="metricSemesterAvg" class="text-2xl font-extrabold text-gray-900 font-mono">0.00</span><span class="text-xs font-semibold text-gray-500">/ 5.0</span>
           </div>
+          <p class="mt-1 text-xs text-gray-500">Calculado con créditos</p>
         </div>
         <div class="card p-4 border-t-4 border-t-itm-green">
           <span class="card-header">Aprobadas (&ge; 3.0)</span>
           <div class="flex items-baseline space-x-1 mt-2">
             <span id="metricPassedCount" class="text-2xl font-extrabold text-itm-green font-mono">0</span><span id="metricTotalSubjectsText" class="text-xs font-semibold text-gray-500">de 0</span>
           </div>
+          <p class="mt-1 text-xs text-itm-green font-semibold">Nota mínima ITM: 3.0</p>
         </div>
         <div class="card p-4 border-t-4 border-t-itm-red">
           <span class="card-header">En Riesgo Crítico</span>
           <div class="flex items-baseline space-x-1 mt-2">
             <span id="metricRiskCount" class="text-2xl font-extrabold text-itm-red font-mono">0</span><span class="text-xs font-semibold text-gray-500">req &gt; 5.0</span>
           </div>
+          <p class="mt-1 text-xs text-itm-red font-semibold">Atención prioritaria</p>
         </div>
         <div class="card p-4 border-t-4 border-t-itm-gold">
           <span class="card-header">Créditos Inscritos</span>
           <div class="flex items-baseline space-x-1 mt-2">
             <span id="metricCreditsCount" class="text-2xl font-extrabold text-gray-900 font-mono">0</span><span class="text-xs font-semibold text-gray-500">créditos</span>
           </div>
+          <p class="mt-1 text-xs text-yellow-600 font-semibold">Carga académica activa</p>
         </div>
       </div>
 
@@ -196,39 +222,71 @@
       <!-- Listado de Materias -->
       <div class="pt-2">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-extrabold text-gray-900 flex items-center gap-2">Materias del Semestre <span id="subjectCountBadge" class="text-xs px-2 py-0.5 rounded-full font-bold bg-itm-navy text-white">0/10</span></h3>
-          <button id="btnOpenAddSubject" style="display: none;" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow">+ Matricular Materia</button>
+          <h3 class="text-xl font-extrabold text-gray-900 flex items-center gap-2">Materias del Semestre <span id="subjectCountBadge" class="text-xs px-2 py-0.5 rounded-full font-bold bg-itm-navy text-white">0/10</span></h3>
+          <button id="btnOpenAddSubject" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow">+ Matricular Materia</button>
         </div>
-        <!-- Aquí se inyectan las materias con los 5 cuadros -->
-        <div id="subjectsContainer" class="flex flex-col gap-4"></div>
+        <div id="subjectsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
       </div>
     </main>
 
-    <!-- COLUMNA DERECHA: Herramientas y Tips (25%) -->
-    <aside class="w-full lg:w-1/4 flex-shrink-0 flex flex-col space-y-6">
+    <!-- COLUMNA DERECHA (20%): Herramientas y Tips -->
+    <aside class="hidden lg:flex flex-col space-y-6 col-span-1">
+      
       <!-- Redes Sociales -->
       <div class="card p-5">
         <h3 class="card-header mb-4">Redes Sociales y Contacto</h3>
         <div class="flex justify-around gap-2">
+          <!-- WhatsApp -->
           <a href="#" class="p-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-green-50 hover:text-green-600 transition" title="WhatsApp">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           </a>
+          <!-- Instagram -->
           <a href="#" class="p-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-pink-50 hover:text-pink-600 transition" title="Instagram">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
           </a>
+          <!-- LinkedIn -->
           <a href="#" class="p-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition" title="LinkedIn">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
           </a>
         </div>
       </div>
+
       <!-- IA y Herramientas -->
       <div class="card p-5">
         <h3 class="card-header mb-4 flex items-center gap-2"><svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg> Asistentes IA</h3>
         <ul class="space-y-3">
           <li><a href="https://chat.openai.com/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-200 transition group"><span class="text-sm font-semibold text-gray-700">ChatGPT</span> <svg class="w-4 h-4 text-gray-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
           <li><a href="https://gemini.google.com/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-200 transition group"><span class="text-sm font-semibold text-gray-700">Google Gemini</span> <svg class="w-4 h-4 text-gray-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
+          <li><a href="https://www.perplexity.ai/" target="_blank" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-200 transition group"><span class="text-sm font-semibold text-gray-700">Perplexity (Buscador)</span> <svg class="w-4 h-4 text-gray-400 group-hover:text-itm-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a></li>
         </ul>
       </div>
+
+      <!-- Google Apps Integradas -->
+      <div class="card p-5 border-t-4 border-blue-500">
+        <h3 class="card-header mb-4 flex items-center gap-2">Ecosistema Google</h3>
+        <div class="grid grid-cols-2 gap-2">
+          <a href="https://drive.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Drive"><span class="text-xs font-bold text-gray-600">Drive</span></a>
+          <a href="https://docs.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Google_Docs_logo_%282014-2020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Docs"><span class="text-xs font-bold text-gray-600">Docs</span></a>
+          <a href="https://calendar.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="w-6 h-6 mx-auto mb-1" alt="Calendar"><span class="text-xs font-bold text-gray-600">Calendar</span></a>
+          <a href="https://scholar.google.com/" target="_blank" class="text-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition"><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Google_Scholar_logo.svg" class="w-6 h-6 mx-auto mb-1" alt="Scholar"><span class="text-xs font-bold text-gray-600">Scholar</span></a>
+        </div>
+      </div>
+
+      <!-- Noticias de Tecnología -->
+      <div class="card p-5">
+        <h3 class="card-header mb-4">Noticias de Tecnología</h3>
+        <div class="space-y-3">
+          <a href="https://es.wired.com/" target="_blank" class="block hover:bg-gray-50 p-2 rounded-lg transition border border-transparent hover:border-gray-200">
+            <h4 class="text-xs font-bold text-gray-800">Tendencias en Ingeniería</h4>
+            <p class="text-xs text-gray-500 mt-1">Descubre los avances en inteligencia artificial y desarrollo de software para el 2026.</p>
+          </a>
+          <a href="https://www.xataka.com/" target="_blank" class="block hover:bg-gray-50 p-2 rounded-lg transition border border-transparent hover:border-gray-200">
+            <h4 class="text-xs font-bold text-gray-800">Xataka: Innovación</h4>
+            <p class="text-xs text-gray-500 mt-1">Las últimas noticias sobre hardware, computación y el mundo digital actualizadas hoy.</p>
+          </a>
+        </div>
+      </div>
+
     </aside>
   </div>
 
@@ -395,7 +453,6 @@
 
       const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvXovX37K3dU2qBcSJPC49RPHDis0DM9z-kAsEsvf20jKfX3fKbczVSfVScJ1eHGIZ/exec';
       const MAX_STUDENTS = 5;
-      const MAX_NOTES = 5; // Límite estricto de los 5 cuadros
       
       const DIEGO_STUDENT = {
         id: 'std_diego', name: 'DIEGO ALEJANDRO QUINTERO CANO', program: 'INGENIERÍA DE SISTEMAS (Pensum 5-1)', semester: 'Período 2026-2',
@@ -558,69 +615,41 @@
           container.innerHTML = subjects.map(sub => {
             const calc = calculateSubjectStatus(sub.evaluations);
             
-            // Textos dinámicos del progreso
-            let statusText = '';
-            let statusColor = '';
-            
-            if (calc.status === 'passed') {
-              statusText = '¡Aprobada!'; statusColor = 'bg-green-100 text-green-800 border-green-300';
-            } else if (calc.status === 'failed') {
-              statusText = 'Perdida'; statusColor = 'bg-red-100 text-red-800 border-red-300';
-            } else if (calc.status === 'critical') {
-              statusText = 'En Riesgo Crítico'; statusColor = 'bg-red-100 text-red-800 border-red-300';
-            } else if (calc.status === 'empty') {
-              statusText = 'Sin Evaluar'; statusColor = 'bg-gray-100 text-gray-600 border-gray-300';
-            } else {
-              statusText = `Requiere ${calc.requiredGrade.toFixed(2)} para pasar`; statusColor = 'bg-yellow-100 text-yellow-800 border-yellow-300';
-            }
-
-            // CREACIÓN DE LOS 5 CUADROS
-            let boxesHtml = '<div class="grid grid-cols-5 gap-2 mt-4">';
-            for (let i = 0; i < MAX_NOTES; i++) {
-              if (i < sub.evaluations.length) {
+            // SIMULADOR VISUAL DE 5 NOTAS
+            let slotsHTML = '';
+            for (let i = 0; i < 5; i++) {
+              if (i < (sub.evaluations || []).length) {
                 const ev = sub.evaluations[i];
-                boxesHtml += `
-                  <div class="relative bg-white border border-gray-200 shadow-sm rounded-lg p-2 text-center group transition-all hover:border-itm-navy flex flex-col justify-between">
-                    <span class="block text-[8px] sm:text-[9px] font-bold text-gray-500 uppercase truncate w-full" title="${escapeHtml(ev.name)}">${escapeHtml(ev.name)}</span>
-                    <span class="block font-mono text-base sm:text-lg font-black text-gray-800 my-1">${parseFloat(ev.grade).toFixed(1)}</span>
-                    <span class="block text-[9px] font-semibold text-gray-400 bg-gray-50 rounded py-0.5">${parseFloat(ev.weight)}%</span>
-                    
-                    <div class="absolute inset-0 bg-white bg-opacity-90 backdrop-blur-[2px] flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg ${isAdmin ? '' : 'hidden'}">
-                        <button data-action="edit-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-itm-gold hover:text-yellow-600" title="Editar"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button>
-                        <button data-action="delete-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-red-500 hover:text-red-700" title="Eliminar"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
+                slotsHTML += `
+                  <div class="flex-1 border border-gray-200 rounded-lg bg-white p-1.5 text-center relative group hover:border-itm-navy transition-all shadow-sm flex flex-col justify-center h-14">
+                    <span class="block text-[8px] font-bold text-gray-400 uppercase truncate px-1" title="${escapeHtml(ev.name)}">${escapeHtml(ev.name)}</span>
+                    <span class="block font-mono font-black text-sm ${ev.grade >= 3.0 ? 'text-itm-green' : 'text-itm-red'} leading-tight">${parseFloat(ev.grade).toFixed(1)}</span>
+                    <div class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg ${isAdmin ? '' : 'hidden'}">
+                      <button data-action="edit-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-itm-navy hover:text-itm-gold mx-1" title="Editar"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button>
+                      <button data-action="delete-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-red-500 hover:text-red-700 mx-1" title="Eliminar"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
                     </div>
                   </div>
                 `;
               } else {
-                const emptyCount = MAX_NOTES - sub.evaluations.length;
-                const weightPerEmpty = emptyCount > 0 ? (calc.remainingWeight / emptyCount).toFixed(1) : 0;
-                let reqGradeTxt = calc.status === 'passed' ? '0.0' : calc.requiredGrade.toFixed(1);
-                let reqColor = calc.status === 'passed' ? 'text-green-500' : (calc.requiredGrade > 5.0 ? 'text-red-500' : 'text-yellow-600');
-                let bgStyle = calc.requiredGrade > 5.0 ? 'bg-red-50 border-red-200' : 'bg-gray-50 border-gray-200';
-
-                boxesHtml += `
-                  <div class="border border-dashed ${bgStyle} rounded-lg p-2 text-center flex flex-col justify-center items-center">
-                    <span class="block text-[8px] sm:text-[9px] font-bold text-gray-400 uppercase">Falta</span>
-                    <span class="block font-mono text-[10px] sm:text-xs font-bold ${reqColor} my-1">Req: ${reqGradeTxt}</span>
-                    <span class="block text-[9px] font-semibold text-gray-400">~${weightPerEmpty}%</span>
+                let reqText = calc.status === 'passed' ? '0.0' : (calc.requiredGrade > 5.0 ? 'X' : calc.requiredGrade.toFixed(1));
+                let reqColor = calc.status === 'passed' ? 'text-itm-green' : (calc.requiredGrade > 5.0 ? 'text-itm-red' : 'text-yellow-600');
+                let titleText = calc.status === 'passed' ? 'Aprobada' : (calc.requiredGrade > 5.0 ? 'Perdida' : 'Necesitas');
+                
+                slotsHTML += `
+                  <div class="flex-1 border-2 border-dashed border-gray-200 rounded-lg bg-gray-50 bg-opacity-50 p-1.5 text-center flex flex-col justify-center h-14">
+                    <span class="block text-[8px] font-bold text-gray-400 uppercase">${titleText}</span>
+                    <span class="block font-mono font-bold text-sm ${reqColor} leading-tight">${reqText}</span>
                   </div>
                 `;
               }
             }
-            boxesHtml += '</div>';
 
             return `
               <div class="card p-0 flex flex-col justify-between overflow-hidden relative">
-                
-                <!-- Etiqueta de Estado Flotante -->
-                <div class="absolute top-3 right-3 text-[10px] px-2 py-0.5 rounded-full font-bold border ${statusColor} shadow-sm z-10">
-                  ${statusText}
-                </div>
-
                 <div class="p-4 pt-5">
-                  <div class="flex justify-between items-start mb-2">
-                    <div class="pr-24">
-                      <h4 class="font-extrabold text-sm text-gray-900 uppercase leading-tight">${escapeHtml(sub.name)}</h4>
+                  <div class="flex justify-between items-start mb-4">
+                    <div>
+                      <h4 class="font-extrabold text-sm text-gray-900 uppercase pr-2">${escapeHtml(sub.name)}</h4>
                       <p class="text-xs text-gray-500 mt-1">${sub.credits} créditos</p>
                     </div>
                     <div class="flex gap-1 ml-2 ${isAdmin ? '' : 'hidden'}">
@@ -630,7 +659,7 @@
                   </div>
 
                   <!-- Barra de Progreso del 100% -->
-                  <div class="mb-2">
+                  <div class="mb-4">
                     <div class="flex justify-between text-[10px] font-bold text-gray-500 mb-1">
                       <span>Evaluado: ${calc.evaluatedWeight}%</span>
                       <span>Falta evaluar: ${calc.remainingWeight}%</span>
@@ -640,8 +669,15 @@
                     </div>
                   </div>
 
-                  ${boxesHtml}
+                  <div class="bg-gray-50 rounded-lg p-3 flex justify-between items-center mb-4 border border-gray-100">
+                    <div><span class="text-xs uppercase font-bold text-gray-500 block mb-0.5">Nota Acumulada</span><span class="font-mono text-lg font-black text-gray-900">${calc.accumulatedGrade.toFixed(2)}</span></div>
+                    <div class="text-right"><span class="text-xs uppercase font-bold text-gray-500 block mb-0.5">Falta para 3.0</span><span class="font-mono text-lg font-black ${calc.status==='passed'?'text-itm-green':calc.status==='critical'?'text-itm-red':'text-gray-900'}">${calc.status==='passed'?'0.00':calc.requiredGrade.toFixed(2)}</span></div>
+                  </div>
 
+                  <!-- 5 CUADROS DE SIMULACIÓN -->
+                  <div class="flex gap-1.5 mb-2 mt-2">
+                    ${slotsHTML}
+                  </div>
                 </div>
                 <button data-action="add-eval" data-subject-id="${sub.id}" class="w-full bg-gray-50 hover:bg-gray-100 text-itm-navy text-xs font-bold py-3 border-t border-gray-100 transition-colors ${isAdmin ? '' : 'hidden'}">+ Registrar Evaluación</button>
               </div>`;
@@ -660,6 +696,7 @@
 
       function setupEvents() {
         
+        // BOTÓN CANDADO (PIN 1983)
         document.getElementById('btnAdminUnlock').addEventListener('click', () => {
           if (isAdmin) {
             isAdmin = false;
@@ -715,23 +752,20 @@
             if(!checkAdmin()) return; 
             
             const act = actionBtn.dataset.action; const subId = actionBtn.dataset.subjectId;
-            const sub = s.subjects.find(x => x.id === subId); if(!sub) return;
-
+            
             if (act === 'delete-subject') { if(confirm('¿Eliminar materia y todas sus notas?')) store.deleteSubject(s.id, subId); }
             
             if (act === 'edit-subject') {
+              const sub = s.subjects.find(x => x.id === subId); if(!sub) return;
               document.getElementById('inputSubjectId').value = sub.id; document.getElementById('inputSubjectName').value = sub.name; document.getElementById('inputSubjectCode').value = sub.code; document.getElementById('inputSubjectCredits').value = sub.credits; document.getElementById('modalSubject').classList.remove('hidden');
             }
             
             if (act === 'add-eval') { 
-              if (sub.evaluations.length >= MAX_NOTES) {
-                alert('⚠️ Límite alcanzado: Ya tienes 5 notas registradas.\nSi necesitas ajustar porcentajes, por favor edita una de las notas existentes.');
-                return;
-              }
               document.getElementById('formEvaluation').reset(); document.getElementById('inputEvalSubjectId').value = subId; document.getElementById('inputEvalId').value=''; document.getElementById('modalEvaluation').classList.remove('hidden'); 
             }
             
             if (act === 'edit-eval') {
+              const sub = s.subjects.find(x => x.id === subId); if(!sub) return;
               const ev = sub.evaluations.find(x => x.id === actionBtn.dataset.evalId); if(!ev) return;
               document.getElementById('inputEvalSubjectId').value = sub.id; document.getElementById('inputEvalId').value = ev.id; document.getElementById('inputEvalName').value = ev.name; document.getElementById('inputEvalType').value = ev.type; document.getElementById('inputEvalWeight').value = ev.weight; document.getElementById('inputEvalGrade').value = ev.grade; document.getElementById('modalEvaluation').classList.remove('hidden');
             }
@@ -769,9 +803,16 @@
 
           const student = store.getActiveStudent();
           const subject = student.subjects.find(sub => sub.id === sId);
-          let currentTotalWeight = 0;
           
-          subject.evaluations.forEach(ev => {
+          // TOPE DE 5 NOTAS (No aplica si estoy editando una existente)
+          if (!eId && (subject.evaluations || []).length >= 5) {
+            alert('Has alcanzado el tope máximo de 5 notas para esta materia.');
+            return;
+          }
+
+          // RESTRICCIÓN DEL 100%
+          let currentTotalWeight = 0;
+          (subject.evaluations || []).forEach(ev => {
             if (ev.id !== eId) currentTotalWeight += parseFloat(ev.weight);
           });
 
@@ -788,7 +829,7 @@
             grade: gradeInput 
           }; 
           
-          const activeId = student.id; 
+          const activeId = store.getActiveStudent().id; 
           if(eId) store.updateEvaluation(activeId, sId, eId, data); 
           else store.addEvaluation(activeId, sId, data); 
           document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden')); 
