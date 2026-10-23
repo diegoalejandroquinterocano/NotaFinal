@@ -110,6 +110,31 @@
         </ul>
       </div>
 
+      <!-- NUEVO: Plataformas de Clases y Materias -->
+      <div class="card p-5 border-t-4 border-itm-cyan">
+        <h3 class="card-header mb-4 flex items-center gap-2">Plataformas de Materias</h3>
+        <ul class="space-y-4">
+          <li>
+            <a href="https://siaweb.itm.edu.co/Clavealumnos.asp" target="_blank" class="block group">
+              <span class="flex items-center text-sm font-bold text-gray-800 group-hover:text-itm-cyan transition"><span class="w-2 h-2 rounded-full bg-itm-cyan mr-2"></span> Portal SIA Alumnos</span>
+              <p class="text-xs text-gray-500 ml-4 mt-0.5">Consulta oficial de notas y materias.</p>
+            </a>
+          </li>
+          <li>
+            <a href="https://teams.cloud.microsoft/" target="_blank" class="block group">
+              <span class="flex items-center text-sm font-bold text-gray-800 group-hover:text-indigo-600 transition"><span class="w-2 h-2 rounded-full bg-indigo-500 mr-2"></span> Microsoft Teams</span>
+              <p class="text-xs text-gray-500 ml-4 mt-0.5">Salas de clases y equipos virtuales.</p>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.nod0.dev/cuenta/cursos" target="_blank" class="block group">
+              <span class="flex items-center text-sm font-bold text-gray-800 group-hover:text-gray-900 transition"><span class="w-2 h-2 rounded-full bg-gray-800 mr-2"></span> Cursos Nod0.dev</span>
+              <p class="text-xs text-gray-500 ml-4 mt-0.5">Material de desarrollo y programación.</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+
       <!-- Instituciones Aliadas -->
       <div class="card p-5 border-t-4 border-green-500">
         <h3 class="card-header mb-4 flex items-center gap-2">Instituciones Aliadas en Medellín</h3>
@@ -152,7 +177,8 @@
             <h3 class="text-xs font-bold uppercase tracking-wider text-itm-navy">Modo Multi-Estudiante <span class="text-gray-500 normal-case ml-1" id="studentCounterText">(3/5)</span></h3>
             <p class="text-xs text-gray-500">Conmuta entre perfiles para gestionar notas</p>
           </div>
-          <button id="btnOpenAddStudent" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow transition-colors">+ Nuevo Estudiante</button>
+          <!-- Botón oculto por defecto (Requiere PIN) -->
+          <button id="btnOpenAddStudent" style="display: none;" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow transition-colors">+ Nuevo Estudiante</button>
         </div>
         <div class="flex items-center gap-2 overflow-x-auto" id="studentsTabsContainer"></div>
       </div>
@@ -161,14 +187,15 @@
       <div class="card p-5 border-l-4 border-itm-gold" id="studentHeaderCard">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="flex items-center space-x-4">
-            <div id="studentAvatar" class="w-14 h-14 rounded-xl bg-itm-navy flex items-center justify-center text-white text-xl font-bold shadow-md">ITM</div>
+            <div id="studentAvatar" class="w-12 h-12 rounded-xl bg-itm-navy flex items-center justify-center text-white text-lg font-bold shadow-md">ITM</div>
             <div>
-              <h2 id="studentNameText" class="text-xl font-extrabold text-gray-900 tracking-tight">Cargando...</h2>
+              <h2 id="studentNameText" class="text-lg font-extrabold text-gray-900 tracking-tight">Cargando...</h2>
               <p id="studentProgramText" class="text-sm text-gray-600 font-medium mt-0.5">Cargando...</p>
             </div>
           </div>
           <div class="flex gap-2">
-            <button id="btnEditCurrentStudent" class="px-4 py-2 text-xs font-bold text-white bg-gray-800 hover:bg-gray-900 rounded-lg shadow transition-colors">Editar Perfil</button>
+            <!-- Botón oculto por defecto (Requiere PIN) -->
+            <button id="btnEditCurrentStudent" style="display: none;" class="px-4 py-2 text-xs font-bold text-white bg-gray-800 hover:bg-gray-900 rounded-lg shadow transition-colors">Editar Perfil</button>
           </div>
         </div>
       </div>
@@ -221,7 +248,7 @@
       <div class="pt-2">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-xl font-extrabold text-gray-900 flex items-center gap-2">Materias del Semestre <span id="subjectCountBadge" class="text-xs px-2 py-0.5 rounded-full font-bold bg-itm-navy text-white">0/10</span></h3>
-          <button id="btnOpenAddSubject" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow">+ Matricular Materia</button>
+          <button id="btnOpenAddSubject" style="display: none;" class="px-4 py-2 text-xs font-bold rounded-lg bg-itm-navy hover:bg-itm-dark text-white shadow">+ Matricular Materia</button>
         </div>
         <div id="subjectsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
       </div>
@@ -577,7 +604,7 @@
         const student = store.getActiveStudent(); const students = store.getAllStudents(); const subjects = student ? student.subjects : [];
         if (!student) return;
 
-        // Visualización del Candado según Modo Admin
+        // Visualización del Candado
         document.getElementById('textAdminMode').textContent = isAdmin ? 'Modo Editor' : 'Modo Lectura';
         const iconLock = document.getElementById('iconLock');
         if (isAdmin) {
@@ -614,7 +641,7 @@
           container.innerHTML = subjects.map(sub => {
             const calc = calculateSubjectStatus(sub.evaluations);
             
-            // SIMULADOR VISUAL VERTICAL (5 CUADROS CLAROS Y LEGIBLES)
+            // SIMULADOR VISUAL VERTICAL DE 5 NOTAS
             let slotsHTML = '<div class="space-y-1.5 mt-3">';
             for (let i = 0; i < 5; i++) {
               if (i < (sub.evaluations || []).length) {
@@ -625,7 +652,7 @@
                     <div class="flex items-center space-x-2">
                       <span class="font-mono font-bold text-gray-900 bg-gray-100 px-2 py-0.5 rounded">${ev.grade.toFixed(2)}</span>
                       <button data-action="edit-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-gray-400 hover:text-itm-gold" title="Editar Nota"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg></button>
-                      <button data-action="delete-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-gray-400 hover:text-red-500" title="Eliminar Nota"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
+                      <button data-action="delete-eval" data-subject-id="${sub.id}" data-eval-id="${ev.id}" class="text-gray-400 hover:text-red-500" title="Eliminar Nota"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
                     </div>
                   </div>
                 `;
@@ -643,7 +670,6 @@
             }
             slotsHTML += '</div>';
 
-            // Textos dinámicos del progreso (Aprobó, Cuánto Falta, etc.)
             let statusText = '';
             let statusColor = '';
             if (calc.status === 'passed') {
@@ -660,8 +686,6 @@
 
             return `
               <div class="card p-0 flex flex-col justify-between overflow-hidden relative">
-                
-                <!-- Etiqueta de Estado Flotante -->
                 <div class="absolute top-3 right-3 text-[10px] px-2 py-0.5 rounded-full font-bold border ${statusColor} shadow-sm">
                   ${statusText}
                 </div>
@@ -828,6 +852,12 @@
 
           const student = store.getActiveStudent();
           const subject = student.subjects.find(sub => sub.id === sId);
+          
+          // TOPE DE 5 NOTAS (No aplica si estoy editando una existente)
+          if (!eId && (subject.evaluations || []).length >= 5) {
+            alert('Has alcanzado el tope máximo de 5 notas para esta materia.');
+            return;
+          }
 
           // RESTRICCIÓN DEL 100%
           let currentTotalWeight = 0;
